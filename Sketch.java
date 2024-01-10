@@ -1,14 +1,30 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 
 public class Sketch extends PApplet {
 	
 	
+  
+
+  int intworldX;
+  int intworldY;
+
+  // Player movememnt variables
+  boolean blnWPressed;
+  boolean blnAPressed; 
+  boolean blnSPressed;
+  boolean blnDPressed;
+
+  PImage imgOrcAttackDown;
+  
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
   public void settings() {
 	// put your size call here
     size(400, 400);
+
+    imgOrcAttackDown = loadImage("orc_attack_down_1.png");
   }
 
   /** 
@@ -32,5 +48,34 @@ public class Sketch extends PApplet {
     line(50, 125, 70, 50);  
   }
   
-  // define other methods down here.
+
+  public void keyPressed() {
+    if (key == 'w' || key == 'W') {
+      blnWPressed = true;
+    }
+    else if (key == 'a' || key == 'A') {
+      blnAPressed = true;
+    }
+    else if (key == 's' || key == 'S'){
+      blnSPressed = true;
+    }
+    else if (key == 'd' || key == 'D'){
+      blnDPressed = true;
+    }   
+  }
+
+  public void keyReleased() {
+    if (key == 'w' || key == 'W') {
+      blnWPressed = false;
+    }
+    else if (key == 'a' || key == 'A') {
+      blnAPressed = false;
+    }
+    else if (key == 's' || key == 'S'){
+      blnSPressed = false;
+    }
+    else if (key == 'd' || key == 'D'){
+      blnDPressed = false;
+    }
+  }
 }
