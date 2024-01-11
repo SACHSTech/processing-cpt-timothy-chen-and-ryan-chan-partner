@@ -4,8 +4,8 @@ import processing.core.PImage;
 public class Sketch2 extends PApplet {
 	
 
-  int intworldX;
-  int intworldY;
+  int intWorldX;
+  int intWorldY;
   int intPlayerX = 40;
   int intPlayerY = 40;
 
@@ -94,21 +94,24 @@ public class Sketch2 extends PApplet {
   public void keyPressed() {
     if (key == 'w' || key == 'W') {
       blnWPressed = true;
+    
+      intWorldY--;
     }
     else if (key == 'a' || key == 'A') {
       blnAPressed = true;
+     
+      intWorldX++;
     }
     else if (key == 's' || key == 'S'){
       blnSPressed = true;
+      
+      intWorldY++;
     }
     else if (key == 'd' || key == 'D'){
       blnDPressed = true;
+      
+      intWorldX--;
     }   
-    
-    if (key == ' ') {
-      blnDashPressed = true;
-    }
-
   }
 
   public void keyReleased() {
@@ -124,6 +127,7 @@ public class Sketch2 extends PApplet {
     else if (key == 'd' || key == 'D'){
       blnDPressed = false;
     }
+  }
 
     if (key == ' ') {
       blnDashPressed = false;

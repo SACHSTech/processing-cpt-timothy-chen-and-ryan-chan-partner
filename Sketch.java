@@ -6,14 +6,22 @@ public class Sketch extends PApplet {
 	
   
 
-  int intworldX;
-  int intworldY;
+  int intWorldX;
+  int intWorldY;
+  int intPlayerX = 40;
+  int intPlayerY = 40;
+
+  int intDashCooldown = 0;
 
   // Player movememnt variables
   boolean blnWPressed;
   boolean blnAPressed; 
   boolean blnSPressed;
   boolean blnDPressed;
+  boolean blnDashReady = true;
+  boolean blnDashPressed = false;
+
+  
 
   PImage imgOrcAttackDown;
   
@@ -32,6 +40,7 @@ public class Sketch extends PApplet {
    * values here i.e background, stroke, fill etc.
    */
   public void setup() {
+    frameRate(60);
     background(210, 255, 173);
   }
 
@@ -41,26 +50,62 @@ public class Sketch extends PApplet {
   public void draw() {
 	  
 	// sample code, delete this stuff
-    stroke(128);
-    line(150, 25, 270, 350);  
+  if (blnDashPressed == true && blnDashReady == true) {
+    blnDashReady = false;
+    if (blnWPressed == true){
+      intPlayerY -= 10;
+    }
+    if (blnAPressed == true){
+      intPlayerX -= 10;
+    }
+    if (blnSPressed == true){
+      intPlayerY += 10;
+    }
+    if (blnDPressed == true){
+      intPlayerX += 10;
+    }
+    if (blnWPressed == true && blnAPressed == true){
+      intPlayerX -= 10;
+      intPlayerY -= 10;
+    }
+    if (blnWPressed == true && blnDPressed == true){
+      intPlayerX += 10;
+      intPlayerY -= 10;
+    }
+    if (blnSPressed == true && blnAPressed == true){
+      intPlayerX -= 10;
+      intPlayerY += 10;
+    }
+    if (blnSPressed == true && blnDPressed == true){
+      intPlayerX += 10;
+      intPlayerX += 10;
+    }
+  }
 
-    stroke(255);
-    line(50, 125, 70, 50);  
+
   }
   
 
   public void keyPressed() {
     if (key == 'w' || key == 'W') {
       blnWPressed = true;
+    
+      intWorldY--;
     }
     else if (key == 'a' || key == 'A') {
       blnAPressed = true;
+     
+      intWorldX++;
     }
     else if (key == 's' || key == 'S'){
       blnSPressed = true;
+      
+      intWorldY++;
     }
     else if (key == 'd' || key == 'D'){
       blnDPressed = true;
+      
+      intWorldX--;
     }   
   }
 
