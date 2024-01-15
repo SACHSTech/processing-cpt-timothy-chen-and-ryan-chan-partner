@@ -8,8 +8,10 @@ public class Sketch2 extends PApplet {
   int intWorldY;
   int intPlayerX = 40;
   int intPlayerY = 40;
-
+  int intPlayerSpeed = 1;
   int intDashCooldown = 0;
+  int intScreenX;
+  int intScreenY;
 
   // Player movememnt variables
   boolean blnWPressed;
@@ -38,13 +40,21 @@ public class Sketch2 extends PApplet {
   PImage imgOrcUp1;
   PImage imgOrcUp2;
   
+  // Background Images
+  PImage imgGrassBackground;
+  PImage imgBrickBackground;
+  
 	
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
   public void settings() {
 	  // put your size call here
-    size(400, 400);
+    size(800, 800);
+    intScreenX = width/2;
+    intScreenY = height/2;
+
+
     imgOrcAttackDown1 = loadImage("orc_attack_down_1.png");
     imgOrcAttackDown2 = loadImage("orc_attack_down_2.png");
     imgOrcAttackLeft1 = loadImage("orc_attack_left_1.png");
@@ -61,6 +71,8 @@ public class Sketch2 extends PApplet {
     imgOrcRight2 = loadImage("orc_right_2.png");
     imgOrcUp1 = loadImage("orc_up_1.png");
     imgOrcUp2 = loadImage("orc_up_2.png");
+    imgGrassBackground = loadImage("Grass background.jpg");
+    imgBrickBackground = loadImage("Brick Background.jpg");
   }
 
   /** 
@@ -69,8 +81,15 @@ public class Sketch2 extends PApplet {
    */
   public void setup() {
     imageMode(CENTER);
+    
     frameRate(60);
-    background(210, 255, 173);
+    
+    imgGrassBackground.resize(200, 200);
+    imgBrickBackground.resize(200, 200);
+    
+
+    image(imgGrassBackground, 200, 200, 400, 400);
+    image(imgBrickBackground, 200, 400, 400, 400);
   }
 
   /**
@@ -78,6 +97,31 @@ public class Sketch2 extends PApplet {
    */
   public void draw() {
 
+    
+
+    // Image Background
+    image(imgGrassBackground, 200, 200, 400, 400);
+    image(imgBrickBackground, 200, 400, 400, 400);
+
+    // Player Movement
+    if (blnWPressed) {
+      intPlayerY -= intPlayerSpeed;
+      intWorldY -= intPlayerSpeed;
+    }
+    if (blnSPressed) {
+      intPlayerY += intPlayerSpeed;
+      intWorldY += intPlayerSpeed;
+    }
+    if (blnAPressed) {
+      intPlayerX -= intPlayerSpeed;
+      intWorldX -= intPlayerSpeed;
+    }
+    if (blnDPressed) {
+      intPlayerX += intPlayerSpeed;
+      intWorldX += intPlayerSpeed;
+    }
+    
+    
     if (blnDashPressed == true && blnDashReady == true) {
       blnDashReady = false;
       if (blnWPressed == true){
@@ -117,10 +161,10 @@ public class Sketch2 extends PApplet {
       }
     }
 
-    
+    System.out.println(intScreenX);
+    System.out.println(intScreenY);
 
-
-    image(imgOrcAttackDown1, intPlayerX, intPlayerY);
+    image(imgOrcAttackDown1, intScreenX, intScreenY);
   }
   
   public void keyPressed() {
