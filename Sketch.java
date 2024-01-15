@@ -3,9 +3,6 @@ import processing.core.PImage;
 
 public class Sketch extends PApplet {
 	
-	
-  
-
   int intWorldX;
   int intWorldY;
   int intPlayerX = 40;
@@ -29,7 +26,7 @@ public class Sketch extends PApplet {
    * Called once at the beginning of execution, put your size all in this method
    */
   public void settings() {
-	// put your size call here
+	  // put your size call here
     size(400, 400);
 
     imgOrcAttackDown = loadImage("orc_attack_down_1.png");
@@ -40,6 +37,7 @@ public class Sketch extends PApplet {
    * values here i.e background, stroke, fill etc.
    */
   public void setup() {
+    imageMode(CENTER);
     frameRate(60);
     background(210, 255, 173);
   }

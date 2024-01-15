@@ -20,16 +20,47 @@ public class Sketch2 extends PApplet {
   boolean blnDashPressed = false;
 
   
-
-  PImage imgOrcAttackDown;
+  // Orc Images
+  PImage imgOrcAttackDown1;
+  PImage imgOrcAttackDown2;
+  PImage imgOrcAttackLeft1;
+  PImage imgOrcAttackLeft2;
+  PImage imgOrcAttackRight1;
+  PImage imgOrcAttackRight2;
+  PImage imgOrcAttackUp1;
+  PImage imgOrcAttackUp2;
+  PImage imgOrcDown1;
+  PImage imgOrcDown2;
+  PImage imgOrcLeft1;
+  PImage imgOrcLeft2;
+  PImage imgOrcRight1;
+  PImage imgOrcRight2;
+  PImage imgOrcUp1;
+  PImage imgOrcUp2;
+  
 	
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
   public void settings() {
-	// put your size call here
+	  // put your size call here
     size(400, 400);
-    imgOrcAttackDown = loadImage("orc_attack_down_1.png");
+    imgOrcAttackDown1 = loadImage("orc_attack_down_1.png");
+    imgOrcAttackDown2 = loadImage("orc_attack_down_2.png");
+    imgOrcAttackLeft1 = loadImage("orc_attack_left_1.png");
+    imgOrcAttackLeft2 = loadImage("orc_attack_left_2.png");
+    imgOrcAttackRight1 = loadImage("orc_attack_right_1.png");
+    imgOrcAttackRight2 = loadImage("orc_attack_right_2.png");
+    imgOrcAttackUp1 = loadImage("orc_attack_up_1.png");
+    imgOrcAttackUp2 = loadImage("orc_attack_up_2.png");
+    imgOrcDown1 = loadImage("orc_down_1.png");
+    imgOrcDown2 = loadImage("orc_down_2.png");
+    imgOrcLeft1 = loadImage("orc_left_1.png");
+    imgOrcLeft2 = loadImage("orc_left_2.png");
+    imgOrcRight1 = loadImage("orc_right_1.png");
+    imgOrcRight2 = loadImage("orc_right_2.png");
+    imgOrcUp1 = loadImage("orc_up_1.png");
+    imgOrcUp2 = loadImage("orc_up_2.png");
   }
 
   /** 
@@ -37,6 +68,7 @@ public class Sketch2 extends PApplet {
    * values here i.e background, stroke, fill etc.
    */
   public void setup() {
+    imageMode(CENTER);
     frameRate(60);
     background(210, 255, 173);
   }
@@ -85,10 +117,10 @@ public class Sketch2 extends PApplet {
       }
     }
 
-    System.out.println(blnDashReady);
+    
 
 
-    image(imgOrcAttackDown, intPlayerX, intPlayerY, 40, 80);
+    image(imgOrcAttackDown1, intPlayerX, intPlayerY);
   }
   
   public void keyPressed() {
@@ -112,6 +144,9 @@ public class Sketch2 extends PApplet {
       
       intWorldX--;
     }   
+    if (key == ' ') {
+      blnDashPressed = true;
+    }
   }
 
   public void keyReleased() {
@@ -126,13 +161,17 @@ public class Sketch2 extends PApplet {
     }
     else if (key == 'd' || key == 'D'){
       blnDPressed = false;
-    }
-  }
-
+    } 
     if (key == ' ') {
       blnDashPressed = false;
     }
 
-
   }
+
+    
+
+
+  
 }
+
+
