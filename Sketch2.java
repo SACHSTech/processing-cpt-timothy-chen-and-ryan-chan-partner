@@ -97,11 +97,7 @@ public class Sketch2 extends PApplet {
    */
   public void draw() {
 
-    
-
     // Image Background
-
-    
     image(imgGrassBackground, width/2, height/2, 800, 800);
     image(imgBrickBackground, width/2, -800, 800, 800);
 
