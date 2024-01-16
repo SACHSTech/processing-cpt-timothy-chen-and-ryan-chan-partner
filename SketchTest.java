@@ -7,8 +7,10 @@ public class SketchTest extends PApplet {
   int intWorldY;
   int intPlayerX = 40;
   int intPlayerY = 40;
-
+  int intPlayerSpeed = 1;
   int intDashCooldown = 0;
+  int intScreenX;
+  int intScreenY;
 
   // Player movememnt variables
   boolean blnWPressed;
@@ -37,6 +39,11 @@ public class SketchTest extends PApplet {
   PImage imgOrcUp1;
   PImage imgOrcUp2;
   
+  // Background Images
+  PImage imgGrassBackground;
+  PImage imgBrickBackground;
+  
+  
 	
   // Enumeration for the state of the game, menu vs gameply
 	private enum STATE{
@@ -53,6 +60,9 @@ public class SketchTest extends PApplet {
   public void settings() {
 	// put your size call here
     size(800, 800);
+    intScreenX = width/2;
+    intScreenY = height/2;
+
     imgOrcAttackDown1 = loadImage("orc_attack_down_1.png");
     imgOrcAttackDown2 = loadImage("orc_attack_down_2.png");
     imgOrcAttackLeft1 = loadImage("orc_attack_left_1.png");
@@ -69,6 +79,8 @@ public class SketchTest extends PApplet {
     imgOrcRight2 = loadImage("orc_right_2.png");
     imgOrcUp1 = loadImage("orc_up_1.png");
     imgOrcUp2 = loadImage("orc_up_2.png");
+    imgGrassBackground = loadImage("Grass background.jpg");
+    imgBrickBackground = loadImage("Brick Background.jpg");
       
   }
 
@@ -80,12 +92,14 @@ public class SketchTest extends PApplet {
     if(State ==  STATE.MENU) {
     imageMode(CENTER);
     frameRate(60);
-    background(0, 0, 0);
     }
     if(State ==  STATE.GAME) {
-      imageMode(CENTER);
-      frameRate(60);
-      background(255, 255, 255);
+    frameRate(60);
+    imgGrassBackground.resize(200, 200);
+    imgBrickBackground.resize(200, 200);
+    
+    image(imgGrassBackground, 200, 200, 400, 400);
+    image(imgBrickBackground, 200, 400, 400, 400);
       }
   }
   /**
@@ -103,51 +117,75 @@ public class SketchTest extends PApplet {
   // define other methods down here. 
   public void game(){
     if(State == STATE.GAME){
-      if (blnDashPressed == true && blnDashReady == true) {
-        blnDashReady = false;
-        if (blnWPressed == true){
-          intPlayerY -= 10;
-        }
-        if (blnAPressed == true){
-          intPlayerX -= 10;
-        }
-        if (blnSPressed == true){
-          intPlayerY += 10;
-        }
-        if (blnDPressed == true){
-          intPlayerX += 10;
-        }
-        if (blnWPressed == true && blnAPressed == true){
-          intPlayerX -= 10;
-          intPlayerY -= 10;
-        }
-        if (blnWPressed == true && blnDPressed == true){
-          intPlayerX += 10;
-          intPlayerY -= 10;
-        }
-        if (blnSPressed == true && blnAPressed == true){
-          intPlayerX -= 10;
-          intPlayerY += 10;
-        }
-        if (blnSPressed == true && blnDPressed == true){
-          intPlayerX += 10;
-          intPlayerX += 10;
-        }
-        
-      }
-  
-      if (blnDashReady == false) {
-        if (frameCount % 180 == 0) {
-          blnDashReady = true;
-        }
-      }
-  
-      
-  
-  
-      image(imgOrcAttackDown1, intPlayerX, intPlayerY);
+
+    // Image Background
+    image(imgGrassBackground, 200, 200, 400, 400);
+    image(imgBrickBackground, 200, 400, 400, 400);
+
+  // Player Movement
+    if (blnWPressed) {
+      intPlayerY -= intPlayerSpeed;
+      intWorldY -= intPlayerSpeed;
     }
+    if (blnSPressed) {
+      intPlayerY += intPlayerSpeed;
+      intWorldY += intPlayerSpeed;
+    }
+    if (blnAPressed) {
+      intPlayerX -= intPlayerSpeed;
+      intWorldX -= intPlayerSpeed;
+    }
+    if (blnDPressed) {
+      intPlayerX += intPlayerSpeed;
+      intWorldX += intPlayerSpeed;
+    }
+    
+    
+    if (blnDashPressed == true && blnDashReady == true) {
+      blnDashReady = false;
+      if (blnWPressed == true){
+        intPlayerY -= 10;
+      }
+      if (blnAPressed == true){
+        intPlayerX -= 10;
+      }
+      if (blnSPressed == true){
+        intPlayerY += 10;
+      }
+      if (blnDPressed == true){
+        intPlayerX += 10;
+      }
+      if (blnWPressed == true && blnAPressed == true){
+        intPlayerX -= 10;
+        intPlayerY -= 10;
+      }
+      if (blnWPressed == true && blnDPressed == true){
+        intPlayerX += 10;
+        intPlayerY -= 10;
+      }
+      if (blnSPressed == true && blnAPressed == true){
+        intPlayerX -= 10;
+        intPlayerY += 10;
+      }
+      if (blnSPressed == true && blnDPressed == true){
+        intPlayerX += 10;
+        intPlayerX += 10;
+      }
+      
+    }
+
+    if (blnDashReady == false) {
+      if (frameCount % 180 == 0) {
+        blnDashReady = true;
+      }
+    }
+
+    System.out.println(intScreenX);
+    System.out.println(intScreenY);
+
+    image(imgOrcAttackDown1, intScreenX, intScreenY);
   }
+}
   public void keyPressed() {
     if (key == 'w' || key == 'W') {
       blnWPressed = true;
