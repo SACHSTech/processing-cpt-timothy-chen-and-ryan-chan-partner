@@ -2,13 +2,25 @@ import processing.core.PApplet;
 
 public class Sketch1 extends PApplet {
 	
-	
+  /** 
+   * Enumeration for the state of the game, menu vs gameply
+   * 
+   */
+	private enum STATE{
+    MENU,
+    GAME
+  };
+
+  // Creates State variable to check what state the game is in based on
+  private STATE State = STATE.MENU;
+  
   /**
    * Called once at the beginning of execution, put your size all in this method
-   */
+   */ 
   public void settings() {
 	// put your size call here
     fullScreen();
+      
   }
 
   /** 
@@ -28,5 +40,10 @@ public class Sketch1 extends PApplet {
   
   }
   
-  // define other methods down here.
+  // define other methods down here. 
+  public void game(){
+    if(State == STATE.GAME){
+
+    }
+  }
 }
