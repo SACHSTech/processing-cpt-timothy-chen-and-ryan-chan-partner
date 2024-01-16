@@ -4,11 +4,11 @@ import processing.core.PImage;
 public class Sketch2 extends PApplet {
 	
 
-  int intWorldX;
-  int intWorldY;
+  int intWorldX = 4800;
+  int intWorldY = 4800;
   int intPlayerX = 40;
   int intPlayerY = 40;
-  int intPlayerSpeed = 1;
+  int intPlayerSpeed = 2;
   int intDashCooldown = 0;
   int intScreenX;
   int intScreenY;
@@ -51,8 +51,8 @@ public class Sketch2 extends PApplet {
   public void settings() {
 	  // put your size call here
     size(800, 800);
-    intScreenX = width/2;
-    intScreenY = height/2;
+    intPlayerX = width/2;
+    intPlayerY = height/2;
 
 
     imgOrcAttackDown1 = loadImage("orc_attack_down_1.png");
@@ -88,8 +88,8 @@ public class Sketch2 extends PApplet {
     imgBrickBackground.resize(200, 200);
     
 
-    image(imgGrassBackground, 200, 200, 400, 400);
-    image(imgBrickBackground, 200, 400, 400, 400);
+    image(imgGrassBackground, width/2, height/2, 800, 800);
+    image(imgBrickBackground, width/2, -800, 800, 800);
   }
 
   /**
@@ -100,8 +100,10 @@ public class Sketch2 extends PApplet {
     
 
     // Image Background
-    image(imgGrassBackground, 200, 200, 400, 400);
-    image(imgBrickBackground, 200, 400, 400, 400);
+
+    
+    image(imgGrassBackground, width/2, height/2, 800, 800);
+    image(imgBrickBackground, width/2, -800, 800, 800);
 
     // Player Movement
     if (blnWPressed) {
@@ -154,6 +156,7 @@ public class Sketch2 extends PApplet {
       }
       
     }
+    
 
     if (blnDashReady == false) {
       if (frameCount % 180 == 0) {
@@ -161,16 +164,16 @@ public class Sketch2 extends PApplet {
       }
     }
 
-    System.out.println(intScreenX);
-    System.out.println(intScreenY);
+    
 
-    image(imgOrcAttackDown1, intScreenX, intScreenY);
+    
+    
   }
   
   public void keyPressed() {
     if (key == 'w' || key == 'W') {
       blnWPressed = true;
-    
+      
       intWorldY--;
     }
     else if (key == 'a' || key == 'A') {
