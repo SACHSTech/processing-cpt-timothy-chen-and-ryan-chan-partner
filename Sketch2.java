@@ -6,8 +6,8 @@ public class Sketch2 extends PApplet {
 
   int intWorldX = 4800;
   int intWorldY = 4800;
-  int intPlayerX = 40;
-  int intPlayerY = 40;
+  int intPlayerX;
+  int intPlayerY;
   int intPlayerSpeed = 2;
   int intDashCooldown = 0;
   int intScreenX;
@@ -126,6 +126,7 @@ public class Sketch2 extends PApplet {
     
     if (blnDashPressed == true && blnDashReady == true) {
       blnDashReady = false;
+    
       if (blnWPressed == true){
         intPlayerY -= 10;
       }
@@ -165,7 +166,7 @@ public class Sketch2 extends PApplet {
     }
 
     
-
+    rect(intPlayerX, intPlayerY, 40, 40);
     
     
   }
