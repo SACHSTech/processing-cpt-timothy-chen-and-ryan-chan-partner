@@ -19,17 +19,51 @@ public class Sketch extends PApplet {
   boolean blnDashPressed = false;
 
   
-
-  PImage imgOrcAttackDown;
+  // Orc Images
+  PImage imgOrcAttackDown1;
+  PImage imgOrcAttackDown2;
+  PImage imgOrcAttackLeft1;
+  PImage imgOrcAttackLeft2;
+  PImage imgOrcAttackRight1;
+  PImage imgOrcAttackRight2;
+  PImage imgOrcAttackUp1;
+  PImage imgOrcAttackUp2;
+  PImage imgOrcDown1;
+  PImage imgOrcDown2;
+  PImage imgOrcLeft1;
+  PImage imgOrcLeft2;
+  PImage imgOrcRight1;
+  PImage imgOrcRight2;
+  PImage imgOrcUp1;
+  PImage imgOrcUp2;
+  
+  // Background Images
+  PImage imgGrassBackground;
   
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
   public void settings() {
 	  // put your size call here
-    size(400, 400);
+    fullScreen();
 
-    imgOrcAttackDown = loadImage("orc_attack_down_1.png");
+    imgOrcAttackDown1 = loadImage("orc_attack_down_1.png");
+    imgOrcAttackDown2 = loadImage("orc_attack_down_2.png");
+    imgOrcAttackLeft1 = loadImage("orc_attack_left_1.png");
+    imgOrcAttackLeft2 = loadImage("orc_attack_left_2.png");
+    imgOrcAttackRight1 = loadImage("orc_attack_right_1.png");
+    imgOrcAttackRight2 = loadImage("orc_attack_right_2.png");
+    imgOrcAttackUp1 = loadImage("orc_attack_up_1.png");
+    imgOrcAttackUp2 = loadImage("orc_attack_up_2.png");
+    imgOrcDown1 = loadImage("orc_down_1.png");
+    imgOrcDown2 = loadImage("orc_down_2.png");
+    imgOrcLeft1 = loadImage("orc_left_1.png");
+    imgOrcLeft2 = loadImage("orc_left_2.png");
+    imgOrcRight1 = loadImage("orc_right_1.png");
+    imgOrcRight2 = loadImage("orc_right_2.png");
+    imgOrcUp1 = loadImage("orc_up_1.png");
+    imgOrcUp2 = loadImage("orc_up_2.png");
+    imgGrassBackground = loadImage("Grass background.jpg");
   }
 
   /** 
@@ -39,7 +73,8 @@ public class Sketch extends PApplet {
   public void setup() {
     imageMode(CENTER);
     frameRate(60);
-    background(210, 255, 173);
+    imgGrassBackground.resize(200, 200);
+    image(imgGrassBackground, 200, 200);
   }
 
   /**
@@ -47,43 +82,52 @@ public class Sketch extends PApplet {
    */
   public void draw() {
 	  
-	// sample code, delete this stuff
-  if (blnDashPressed == true && blnDashReady == true) {
-    blnDashReady = false;
-    if (blnWPressed == true){
-      intPlayerY -= 10;
+    // Player dash
+    if (blnDashPressed == true && blnDashReady == true) {
+      blnDashReady = false;
+      if (blnWPressed == true){
+        intPlayerY -= 10;
+      }
+      if (blnAPressed == true){
+        intPlayerX -= 10;
+      }
+      if (blnSPressed == true){
+        intPlayerY += 10;
+      }
+      if (blnDPressed == true){
+        intPlayerX += 10;
+      }
+      if (blnWPressed == true && blnAPressed == true){
+        intPlayerX -= 10;
+        intPlayerY -= 10;
+      }
+      if (blnWPressed == true && blnDPressed == true){
+        intPlayerX += 10;
+        intPlayerY -= 10;
+      }
+      if (blnSPressed == true && blnAPressed == true){
+        intPlayerX -= 10;
+        intPlayerY += 10;
+      }
+      if (blnSPressed == true && blnDPressed == true){
+        intPlayerX += 10;
+        intPlayerX += 10;
+      }
+      
     }
-    if (blnAPressed == true){
-      intPlayerX -= 10;
+
+    if (blnDashReady == false) {
+      if (frameCount % 180 == 0) {
+        blnDashReady = true;
+      }
     }
-    if (blnSPressed == true){
-      intPlayerY += 10;
-    }
-    if (blnDPressed == true){
-      intPlayerX += 10;
-    }
-    if (blnWPressed == true && blnAPressed == true){
-      intPlayerX -= 10;
-      intPlayerY -= 10;
-    }
-    if (blnWPressed == true && blnDPressed == true){
-      intPlayerX += 10;
-      intPlayerY -= 10;
-    }
-    if (blnSPressed == true && blnAPressed == true){
-      intPlayerX -= 10;
-      intPlayerY += 10;
-    }
-    if (blnSPressed == true && blnDPressed == true){
-      intPlayerX += 10;
-      intPlayerX += 10;
-    }
-  }
+
+    
 
 
+    image(imgOrcAttackDown1, intPlayerX, intPlayerY);
   }
   
-
   public void keyPressed() {
     if (key == 'w' || key == 'W') {
       blnWPressed = true;
@@ -105,6 +149,9 @@ public class Sketch extends PApplet {
       
       intWorldX--;
     }   
+    if (key == ' ') {
+      blnDashPressed = true;
+    }
   }
 
   public void keyReleased() {
@@ -119,6 +166,10 @@ public class Sketch extends PApplet {
     }
     else if (key == 'd' || key == 'D'){
       blnDPressed = false;
+    } 
+    if (key == ' ') {
+      blnDashPressed = false;
     }
+
   }
 }
