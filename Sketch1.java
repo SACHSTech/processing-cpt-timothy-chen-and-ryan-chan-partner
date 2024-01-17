@@ -19,7 +19,7 @@ public class Sketch1 extends PApplet {
    */ 
   public void settings() {
 	// put your size call here
-    fullScreen();
+    size(800, 800);
       
   }
 
@@ -35,15 +35,20 @@ public class Sketch1 extends PApplet {
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
-	  
-	// sample code, delete this stuff
-  
+  if(State == STATE.MENU){
+  background(0);
+  text("Play", 200, 200);
+  textAlign(CENTER);
+  textSize(60);
+    } else { 
+  if(State == STATE.GAME){
+      
+    }
+  }
+  if (keyCode == ENTER){
+    State = STATE.GAME; 
+  }
   }
   
   // define other methods down here. 
-  public void game(){
-    if(State == STATE.GAME){
-
-    }
-  }
 }
