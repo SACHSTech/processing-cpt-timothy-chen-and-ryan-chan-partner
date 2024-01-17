@@ -81,7 +81,8 @@ public class Sketch2 extends PApplet {
    */
   public void setup() {
     imageMode(CENTER);
-    
+    rectMode(CENTER);
+    ellipseMode(CENTER);
     frameRate(60);
     
     imgGrassBackground.resize(200, 200);
@@ -100,8 +101,6 @@ public class Sketch2 extends PApplet {
     
 
     // Image Background
-
-    
     image(imgGrassBackground, width/2, height/2, 800, 800);
     image(imgBrickBackground, width/2, -800, 800, 800);
 

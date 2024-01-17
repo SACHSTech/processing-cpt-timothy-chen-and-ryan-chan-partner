@@ -3,12 +3,14 @@ import processing.core.PImage;
 
 public class Sketch extends PApplet {
 	
-  int intWorldX;
-  int intWorldY;
-  int intPlayerX = 40;
-  int intPlayerY = 40;
-
+  int intWorldX = 4800;
+  int intWorldY = 4800;
+  int intPlayerX;
+  int intPlayerY;
+  int intPlayerSpeed = 2;
   int intDashCooldown = 0;
+  int intScreenX;
+  int intScreenY;
 
   // Player movememnt variables
   boolean blnWPressed;
@@ -39,13 +41,16 @@ public class Sketch extends PApplet {
   
   // Background Images
   PImage imgGrassBackground;
+  PImage imgBrickBackground;
   
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
   public void settings() {
 	  // put your size call here
-    fullScreen();
+    size(800, 800);
+    intPlayerX = width/2;
+    intPlayerY = height/2;
 
     imgOrcAttackDown1 = loadImage("orc_attack_down_1.png");
     imgOrcAttackDown2 = loadImage("orc_attack_down_2.png");
@@ -64,6 +69,7 @@ public class Sketch extends PApplet {
     imgOrcUp1 = loadImage("orc_up_1.png");
     imgOrcUp2 = loadImage("orc_up_2.png");
     imgGrassBackground = loadImage("Grass background.jpg");
+    imgBrickBackground = loadImage("Brick Background.jpg");
   }
 
   /** 
@@ -72,9 +78,16 @@ public class Sketch extends PApplet {
    */
   public void setup() {
     imageMode(CENTER);
+    rectMode(CENTER);
+    ellipseMode(CENTER);
     frameRate(60);
+    
     imgGrassBackground.resize(200, 200);
-    image(imgGrassBackground, 200, 200);
+    imgBrickBackground.resize(200, 200);
+    
+
+    image(imgGrassBackground, width/2, height/2, 800, 800);
+    image(imgBrickBackground, width/2, -800, 800, 800);
   }
 
   /**
@@ -82,6 +95,26 @@ public class Sketch extends PApplet {
    */
   public void draw() {
 	  
+    
+    // Player Movement
+    if (blnWPressed) {
+      intPlayerY -= intPlayerSpeed;
+      intWorldY -= intPlayerSpeed;
+    }
+    if (blnSPressed) {
+      intPlayerY += intPlayerSpeed;
+      intWorldY += intPlayerSpeed;
+    }
+    if (blnAPressed) {
+      intPlayerX -= intPlayerSpeed;
+      intWorldX -= intPlayerSpeed;
+    }
+    if (blnDPressed) {
+      intPlayerX += intPlayerSpeed;
+      intWorldX += intPlayerSpeed;
+    }
+
+
     // Player dash
     if (blnDashPressed == true && blnDashReady == true) {
       blnDashReady = false;
