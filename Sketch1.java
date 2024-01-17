@@ -10,7 +10,9 @@ public class Sketch1 extends PApplet {
    */
 	private enum STATE{
     MENU,
-    GAME
+    GAME,
+    SELECTION,
+    OPTIONS
   };
 
   // Creates State variable to check what state the game is in based on
@@ -71,31 +73,31 @@ public class Sketch1 extends PApplet {
   */
 
   fill(0);
-  textSize(40);
-  text("PLAY", 350, 245);
+  textSize(50);
+  text("PLAY", 330, 245);
 
   fill(0);
-  textSize(40);
-  text("Character Selection", 215, 360);
+  textSize(50);
+  text("Character Selection", 180, 360);
   
   fill(0);
-  textSize(40);
-  text("Options", 330, 475);
+  textSize(50);
+  text("Options", 310, 475);
 
   if (intMenuSelect == 1) {
   fill(97, 202, 255);
-  textSize(40);
-  text("PLAY", 350, 245);
+  textSize(50);
+  text("PLAY", 330, 245);
   } else {
   if ( intMenuSelect == 2) { 
   fill(97, 202, 255);
-  textSize(40);
-  text("Character Selection", 215, 360);
+  textSize(50);
+  text("Character Selection", 180, 360);
   } else {
   if (intMenuSelect == 3) { 
   fill(97, 202, 255);
-  textSize(40);
-  text("Options", 330, 475);
+  textSize(50);
+  text("Options", 310, 475);
   }
   
   }
