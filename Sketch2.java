@@ -44,6 +44,7 @@ public class Sketch2 extends PApplet {
   boolean [] blnOrcHideStatus = new boolean[10];
   float fltOrcHp = 100;
   int intOrcViewDistance = 200;
+  int intOrcAttackRange = 20;
   int intOrcSpeed = 4;
   float fltOrcDirectionX;
   float fltOrcDirectionY;
@@ -123,7 +124,10 @@ public class Sketch2 extends PApplet {
     // Image Background
     image(imgGrassBackground, width/2, height/2, 800, 800);
     // image(imgBrickBackground, width/2, -800, 800, 800);
+    
     rect(intPlayerX, intPlayerY, 40, 40);
+    
+    
     for (int intOrcCounter = 0; intOrcCounter < fltOrcY.length; intOrcCounter++) {
       // if statement to set the blnBallHideStatus for each of the snowflakes to false.
       if (blnOrcHideStatus[intOrcCounter] == false) {
@@ -135,8 +139,11 @@ public class Sketch2 extends PApplet {
       }
       
       if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcViewDistance) {
-        
+        for (int i = 0; i < platformNames.length; i++) {
+          
+        }
         if (intPlayerX < fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
+          
           fltOrcX[intOrcCounter] -= intOrcSpeed;
           fltOrcY[intOrcCounter] -= intOrcSpeed;
         }
@@ -152,7 +159,9 @@ public class Sketch2 extends PApplet {
           fltOrcX[intOrcCounter] += intOrcSpeed;
           fltOrcY[intOrcCounter] += intOrcSpeed;
         }
-        
+        if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcAttackRange) {
+
+        }
       }
 
     }
