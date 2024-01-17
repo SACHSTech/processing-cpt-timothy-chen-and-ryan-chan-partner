@@ -10,7 +10,7 @@ public class Sketch2 extends PApplet {
   // Player variables
   int intPlayerX;
   int intPlayerY;
-  int intPlayerSpeed = 2;
+  int intPlayerSpeed = 8;
   int intDashCooldown = 0;
   boolean blnWPressed;
   boolean blnAPressed; 
