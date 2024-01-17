@@ -6,14 +6,12 @@ public class Sketch2 extends PApplet {
 
   int intWorldX = 4800;
   int intWorldY = 4800;
+  
+  // Player variables
   int intPlayerX;
   int intPlayerY;
   int intPlayerSpeed = 2;
   int intDashCooldown = 0;
-  int intScreenX;
-  int intScreenY;
-
-  // Player movememnt variables
   boolean blnWPressed;
   boolean blnAPressed; 
   boolean blnSPressed;
@@ -39,7 +37,19 @@ public class Sketch2 extends PApplet {
   PImage imgOrcRight2;
   PImage imgOrcUp1;
   PImage imgOrcUp2;
+
+  // Orc Variables
+  float[] fltOrcX = new float[10];
+  float[] fltOrcY = new float[10];
+  boolean [] blnOrcHideStatus = new boolean[10];
+  float fltOrcHp = 100;
+  int intOrcViewDistance = 200;
+  int intOrcSpeed = 4;
+  float fltOrcDirectionX;
+  float fltOrcDirectionY;
+
   
+
   // Background Images
   PImage imgGrassBackground;
   PImage imgBrickBackground;
@@ -91,18 +101,66 @@ public class Sketch2 extends PApplet {
 
     image(imgGrassBackground, width/2, height/2, 800, 800);
     image(imgBrickBackground, width/2, -800, 800, 800);
+
+    for (int intOrcY = 0; intOrcY < fltOrcY.length; intOrcY++) {
+      fltOrcY[intOrcY] = random(400);
+    }
+    
+    // For loop to initialise the snowflakes on the x coordinate setting them to a random location across the screen.
+    for (int intOrcX = 0; intOrcX < fltOrcX.length; intOrcX++) {
+      fltOrcX[intOrcX] = random(400);
+    }
+    // For loop to initialise the ballhidestatus and setting it to false.
+    for (int intBooleanCount = 0; intBooleanCount < blnOrcHideStatus.length; intBooleanCount++){
+      blnOrcHideStatus[intBooleanCount] = false;
+    }
   }
 
   /**
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
+    // Image Background
+    image(imgGrassBackground, width/2, height/2, 800, 800);
+    // image(imgBrickBackground, width/2, -800, 800, 800);
+    rect(intPlayerX, intPlayerY, 40, 40);
+    for (int intOrcCounter = 0; intOrcCounter < fltOrcY.length; intOrcCounter++) {
+      // if statement to set the blnBallHideStatus for each of the snowflakes to false.
+      if (blnOrcHideStatus[intOrcCounter] == false) {
+        
+        image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
 
+        // Variable to set the speed in which the snowflakes falls.
+        // fltOrcY[intOrcCounter] += intOrcSpeed;
+      }
+      
+      if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcViewDistance) {
+        
+        if (intPlayerX < fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
+          fltOrcX[intOrcCounter] -= intOrcSpeed;
+          fltOrcY[intOrcCounter] -= intOrcSpeed;
+        }
+        else if (intPlayerX < fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter]) {
+          fltOrcX[intOrcCounter] -= intOrcSpeed;
+          fltOrcY[intOrcCounter] += intOrcSpeed;
+        }
+        else if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
+          fltOrcX[intOrcCounter] += intOrcSpeed;
+          fltOrcY[intOrcCounter] -= intOrcSpeed;
+        }
+        else if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter])  {
+          fltOrcX[intOrcCounter] += intOrcSpeed;
+          fltOrcY[intOrcCounter] += intOrcSpeed;
+        }
+        
+      }
+
+    }
+    
     
 
-    // Image Background
-    // image(imgGrassBackground, width/2, height/2, 800, 800);
-    // image(imgBrickBackground, width/2, -800, 800, 800);
+
+    
 
     // Player Movement
     if (blnWPressed) {
@@ -165,7 +223,10 @@ public class Sketch2 extends PApplet {
     }
 
     
-    rect(intPlayerX, intPlayerY, 40, 40);
+    
+
+    
+    
     
     
   }
