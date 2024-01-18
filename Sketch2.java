@@ -47,16 +47,15 @@ public class Sketch2 extends PApplet {
   float fltOrcDirectionY;
   int intOrcViewDistance = 200;
   int intOrcAttackRange = 20;
-  int intOrcSpeed = 4;
+  int intOrcSpeed = 2;
   int intMoveTick = 0;
   int intTakeStep = 5;
-  boolean blnOrcMoving = false;
-  boolean blnOrcMoveRight = false;
-  boolean blnOrcMoveLeft = false;
-  boolean blnOrcMoveUp = false;
-  boolean blnOrcMoveDown = false;
-  
-  boolean blnStep = false;
+  boolean[] blnOrcMoving = new boolean[10];
+  boolean[] blnOrcMoveRight = new boolean[10];
+  boolean[] blnOrcMoveLeft = new boolean[10];
+  boolean[] blnOrcMoveUp = new boolean[10];
+  boolean[] blnOrcMoveDown = new boolean[10];
+  boolean[] blnStep = new boolean[10];
   
 
   // Background Images
@@ -106,8 +105,11 @@ public class Sketch2 extends PApplet {
     
     imgGrassBackground.resize(200, 200);
     imgBrickBackground.resize(200, 200);
-    imgOrcDown1.resize(40, 40);
-    imgOrcRight1.resize(40, 40);
+    imgOrcRight1.resize(20, 20);
+    imgOrcRight2.resize(20, 20);
+    imgOrcLeft1.resize(20, 20);
+    imgOrcLeft2.resize(20, 20);
+    
 
     image(imgGrassBackground, width/2, height/2, 800, 800);
     image(imgBrickBackground, width/2, -800, 800, 800);
@@ -123,7 +125,15 @@ public class Sketch2 extends PApplet {
     // For loop to initialise the ballhidestatus and setting it to false.
     for (int intBooleanCount = 0; intBooleanCount < blnOrcHideStatus.length; intBooleanCount++){
       blnOrcHideStatus[intBooleanCount] = false;
+      blnOrcMoving[intBooleanCount] = false;
+      blnOrcMoveRight[intBooleanCount] = false;
+      blnOrcMoveLeft[intBooleanCount] = false;
+      blnOrcMoveUp[intBooleanCount] = false;
+      blnOrcMoveDown[intBooleanCount] = false;
+      blnStep[intBooleanCount] = false;
     }
+
+   
   }
 
   /**
@@ -140,26 +150,49 @@ public class Sketch2 extends PApplet {
     for (int intOrcCounter = 0; intOrcCounter < fltOrcY.length; intOrcCounter++) {
       // if statement to set the blnOrcHideStatus for each of the Orcs to false.
       if (blnOrcHideStatus[intOrcCounter] == false) { 
-        image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-      
+        if (blnOrcMoving[intOrcCounter] == false) {
+          image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+        }
         
-      
         if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcViewDistance) {
-          if (blnOrcMoving && blnOrcMoveUp) {
+          
+          
+          if (blnOrcMoving[intOrcCounter] && blnOrcMoveLeft[intOrcCounter] && !blnOrcMoveRight[intOrcCounter]) {
+            blnOrcMoveRight[intOrcCounter] = false;
+
             if (intMoveTick > intTakeStep) {
-              blnStep = !blnStep;
+              blnStep[intOrcCounter] = !blnStep[intOrcCounter];
               intMoveTick = 0;
             }
 
-            if (blnStep) {
-              image(imgOrcUp1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+            if (blnStep[intOrcCounter]) {
+              image(imgOrcLeft1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
             }
             else {
-              image(imgOrcUp2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+              image(imgOrcLeft2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
             }
+            
+          }
+          if (blnOrcMoving[intOrcCounter] && blnOrcMoveRight[intOrcCounter]) {
+            if (intMoveTick > intTakeStep) {
+              blnStep[intOrcCounter] = !blnStep[intOrcCounter];
+              intMoveTick = 0;
+            }
+
+            if (blnStep[intOrcCounter]) {
+              image(imgOrcRight1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+            }
+            else {
+              image(imgOrcRight2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+            }
+            if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= 100) {
+              blnOrcMoveRight[intOrcCounter] = false;
+            }
+
           }
           
-          if (blnOrcMoving && blnOrcMoveRight) {
+          /*
+          else if (blnOrcMoving[intOrcCounter] && blnOrcMoveRight) {
             if (intMoveTick > intTakeStep) {
               blnStep = !blnStep;
               intMoveTick = 0;
@@ -171,38 +204,56 @@ public class Sketch2 extends PApplet {
             else {
               image(imgOrcRight2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
             }
-
           }
+          */
           
-          if (intPlayerX == fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
-            fltOrcX[intOrcCounter] += intOrcSpeed;
-          }
+          
 
-          else if(intPlayerX < fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
+          if(intPlayerX < fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
             
             fltOrcX[intOrcCounter] -= intOrcSpeed;
             fltOrcY[intOrcCounter] -= intOrcSpeed;
             
-            blnOrcMoving = true;
-            blnOrcMoveLeft = true;
+            blnOrcMoving[intOrcCounter] = true;
+            blnOrcMoveLeft[intOrcCounter] = true;
             intMoveTick++;
             
           }
-          else if (intPlayerX < fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter]) {
+          if (intPlayerX < fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter]) {
             fltOrcX[intOrcCounter] -= intOrcSpeed;
             fltOrcY[intOrcCounter] += intOrcSpeed;
+
+            blnOrcMoving[intOrcCounter] = true;
+            blnOrcMoveLeft[intOrcCounter] = true;
+            intMoveTick++;
           }
-          else if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
+          if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
             fltOrcX[intOrcCounter] += intOrcSpeed;
             fltOrcY[intOrcCounter] -= intOrcSpeed;
+
+            blnOrcMoving[intOrcCounter] = true;
+            blnOrcMoveRight[intOrcCounter] = true;
+            intMoveTick++;
           }
-          else if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter])  {
+          if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter])  {
             fltOrcX[intOrcCounter] += intOrcSpeed;
             fltOrcY[intOrcCounter] += intOrcSpeed;
+
+            blnOrcMoving[intOrcCounter] = true;
+            blnOrcMoveRight[intOrcCounter] = true;
+            intMoveTick++;
           }
           if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcAttackRange) {
 
           }
+        }
+        
+        else {
+          blnOrcMoving[intOrcCounter] = false;
+          blnOrcMoveDown[intOrcCounter] = false;
+          blnOrcMoveLeft[intOrcCounter] = false;
+          blnOrcMoveRight[intOrcCounter] = false;
+          blnOrcMoveUp[intOrcCounter] = false;
         }
       }
     }
