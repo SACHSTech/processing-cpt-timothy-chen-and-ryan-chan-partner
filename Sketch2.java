@@ -43,12 +43,20 @@ public class Sketch2 extends PApplet {
   float[] fltOrcY = new float[10];
   boolean [] blnOrcHideStatus = new boolean[10];
   float fltOrcHp = 100;
+  float fltOrcDirectionX;
+  float fltOrcDirectionY;
   int intOrcViewDistance = 200;
   int intOrcAttackRange = 20;
   int intOrcSpeed = 4;
-  float fltOrcDirectionX;
-  float fltOrcDirectionY;
-
+  int intMoveTick = 0;
+  int intTakeStep = 5;
+  boolean blnOrcMoving = false;
+  boolean blnOrcMoveRight = false;
+  boolean blnOrcMoveLeft = false;
+  boolean blnOrcMoveUp = false;
+  boolean blnOrcMoveDown = false;
+  
+  boolean blnStep = false;
   
 
   // Background Images
@@ -98,18 +106,19 @@ public class Sketch2 extends PApplet {
     
     imgGrassBackground.resize(200, 200);
     imgBrickBackground.resize(200, 200);
-    
+    imgOrcDown1.resize(40, 40);
+    imgOrcRight1.resize(40, 40);
 
     image(imgGrassBackground, width/2, height/2, 800, 800);
     image(imgBrickBackground, width/2, -800, 800, 800);
 
     for (int intOrcY = 0; intOrcY < fltOrcY.length; intOrcY++) {
-      fltOrcY[intOrcY] = random(400);
+      fltOrcY[intOrcY] = random(800);
     }
     
     // For loop to initialise the snowflakes on the x coordinate setting them to a random location across the screen.
     for (int intOrcX = 0; intOrcX < fltOrcX.length; intOrcX++) {
-      fltOrcX[intOrcX] = random(400);
+      fltOrcX[intOrcX] = random(800);
     }
     // For loop to initialise the ballhidestatus and setting it to false.
     for (int intBooleanCount = 0; intBooleanCount < blnOrcHideStatus.length; intBooleanCount++){
@@ -129,41 +138,73 @@ public class Sketch2 extends PApplet {
     
     
     for (int intOrcCounter = 0; intOrcCounter < fltOrcY.length; intOrcCounter++) {
-      // if statement to set the blnBallHideStatus for each of the snowflakes to false.
-      if (blnOrcHideStatus[intOrcCounter] == false) {
-        
+      // if statement to set the blnOrcHideStatus for each of the Orcs to false.
+      if (blnOrcHideStatus[intOrcCounter] == false) { 
         image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-
-        // Variable to set the speed in which the snowflakes falls.
-        // fltOrcY[intOrcCounter] += intOrcSpeed;
-      }
       
-      if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcViewDistance) {
-        for (int i = 0; i < platformNames.length; i++) {
-          
-        }
-        if (intPlayerX < fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
-          
-          fltOrcX[intOrcCounter] -= intOrcSpeed;
-          fltOrcY[intOrcCounter] -= intOrcSpeed;
-        }
-        else if (intPlayerX < fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter]) {
-          fltOrcX[intOrcCounter] -= intOrcSpeed;
-          fltOrcY[intOrcCounter] += intOrcSpeed;
-        }
-        else if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
-          fltOrcX[intOrcCounter] += intOrcSpeed;
-          fltOrcY[intOrcCounter] -= intOrcSpeed;
-        }
-        else if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter])  {
-          fltOrcX[intOrcCounter] += intOrcSpeed;
-          fltOrcY[intOrcCounter] += intOrcSpeed;
-        }
-        if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcAttackRange) {
+        
+      
+        if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcViewDistance) {
+          if (blnOrcMoving && blnOrcMoveUp) {
+            if (intMoveTick > intTakeStep) {
+              blnStep = !blnStep;
+              intMoveTick = 0;
+            }
 
+            if (blnStep) {
+              image(imgOrcUp1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+            }
+            else {
+              image(imgOrcUp2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+            }
+          }
+          
+          if (blnOrcMoving && blnOrcMoveRight) {
+            if (intMoveTick > intTakeStep) {
+              blnStep = !blnStep;
+              intMoveTick = 0;
+            }
+
+            if (blnStep) {
+              image(imgOrcRight1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+            }
+            else {
+              image(imgOrcRight2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+            }
+
+          }
+          
+          if (intPlayerX == fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
+            fltOrcX[intOrcCounter] += intOrcSpeed;
+          }
+
+          else if(intPlayerX < fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
+            
+            fltOrcX[intOrcCounter] -= intOrcSpeed;
+            fltOrcY[intOrcCounter] -= intOrcSpeed;
+            
+            blnOrcMoving = true;
+            blnOrcMoveLeft = true;
+            intMoveTick++;
+            
+          }
+          else if (intPlayerX < fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter]) {
+            fltOrcX[intOrcCounter] -= intOrcSpeed;
+            fltOrcY[intOrcCounter] += intOrcSpeed;
+          }
+          else if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
+            fltOrcX[intOrcCounter] += intOrcSpeed;
+            fltOrcY[intOrcCounter] -= intOrcSpeed;
+          }
+          else if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter])  {
+            fltOrcX[intOrcCounter] += intOrcSpeed;
+            fltOrcY[intOrcCounter] += intOrcSpeed;
+          }
+          if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcAttackRange) {
+
+          }
         }
       }
-
     }
     
     
