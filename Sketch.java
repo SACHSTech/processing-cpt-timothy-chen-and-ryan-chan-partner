@@ -85,7 +85,7 @@ public class Sketch extends PApplet {
     imgGrassBackground.resize(200, 200);
     imgBrickBackground.resize(200, 200);
     
-
+    
     image(imgGrassBackground, width/2, height/2, 800, 800);
     image(imgBrickBackground, width/2, -800, 800, 800);
   }
