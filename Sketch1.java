@@ -1,9 +1,9 @@
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PImage;
-import java.awt.Font;
 
 public class Sketch1 extends PApplet {
-	
+
   /** 
    * Enumeration for the state of the game, menu vs gameply
    * 
@@ -12,7 +12,7 @@ public class Sketch1 extends PApplet {
     MENU,
     GAME,
     SELECTION,
-    OPTIONS
+    QUIT
   };
 
   // Creates State variable to check what state the game is in based on
@@ -29,6 +29,7 @@ public class Sketch1 extends PApplet {
 	// put your size call here
     size(800, 800);
     TitleScreen = loadImage("titlebackground.jpg");
+
   }
 
   /** 
@@ -38,6 +39,9 @@ public class Sketch1 extends PApplet {
   public void setup() {
     background(0, 0, 0);
     TitleScreen.resize(800, 800);
+    PFont mono;
+    mono = createFont("8bitoperator JVE", 50);
+    textFont(mono);
   }
 
   /**
@@ -71,7 +75,7 @@ public class Sketch1 extends PApplet {
   /*Font menuFont = new Font("8bitoperator JVE", Font.BOLD, 50);
   setFont(M)
   */
-
+  
   fill(0);
   textSize(50);
   text("PLAY", 330, 245);
@@ -82,7 +86,7 @@ public class Sketch1 extends PApplet {
   
   fill(0);
   textSize(50);
-  text("Options", 310, 475);
+  text("QUIT", 330, 475);
 
   if (intMenuSelect == 1) {
   fill(97, 202, 255);
@@ -97,7 +101,7 @@ public class Sketch1 extends PApplet {
   if (intMenuSelect == 3) { 
   fill(97, 202, 255);
   textSize(50);
-  text("Options", 310, 475);
+  text("QUIT", 330, 475);
   }
   
   }
