@@ -12,6 +12,7 @@ public class Sketch2 extends PApplet {
   int intPlayerY;
   int intPlayerSpeed = 8;
   int intDashCooldown = 0;
+  int intDashDistance = 20;
   boolean blnWPressed;
   boolean blnAPressed; 
   boolean blnSPressed;
@@ -46,16 +47,21 @@ public class Sketch2 extends PApplet {
   float fltOrcDirectionX;
   float fltOrcDirectionY;
   int intOrcViewDistance = 200;
-  int intOrcAttackRange = 20;
+  int intOrcAttackRange = 40;
   int intOrcSpeed = 2;
-  int intMoveTick = 0;
-  int intTakeStep = 5;
+  int intOrcDamage;
+  int[] intMoveTick = new int[10];
+  int[] intTakeStep = new int[10];
+  int[] intAttackTick = new int[10];
+  int[] intAttackSwing = new int[10];
   boolean[] blnOrcMoving = new boolean[10];
   boolean[] blnOrcMoveRight = new boolean[10];
   boolean[] blnOrcMoveLeft = new boolean[10];
   boolean[] blnOrcMoveUp = new boolean[10];
   boolean[] blnOrcMoveDown = new boolean[10];
   boolean[] blnStep = new boolean[10];
+
+  
   
 
   // Background Images
@@ -105,10 +111,11 @@ public class Sketch2 extends PApplet {
     
     imgGrassBackground.resize(200, 200);
     imgBrickBackground.resize(200, 200);
-    imgOrcRight1.resize(20, 20);
-    imgOrcRight2.resize(20, 20);
-    imgOrcLeft1.resize(20, 20);
-    imgOrcLeft2.resize(20, 20);
+    imgOrcDown1.resize(30, 30);
+    imgOrcRight1.resize(30, 30);
+    imgOrcRight2.resize(30, 30);
+    imgOrcLeft1.resize(30, 30);
+    imgOrcLeft2.resize(30, 30);
     
 
     image(imgGrassBackground, width/2, height/2, 800, 800);
@@ -131,9 +138,11 @@ public class Sketch2 extends PApplet {
       blnOrcMoveUp[intBooleanCount] = false;
       blnOrcMoveDown[intBooleanCount] = false;
       blnStep[intBooleanCount] = false;
+      intMoveTick[intBooleanCount] = 0;
+      intTakeStep[intBooleanCount] = 5;
+      intAttackTick[intBooleanCount] = 0;
+      intAttackSwing[intBooleanCount] = 5;
     }
-
-   
   }
 
   /**
@@ -142,27 +151,29 @@ public class Sketch2 extends PApplet {
   public void draw() {
     // Image Background
     image(imgGrassBackground, width/2, height/2, 800, 800);
-    // image(imgBrickBackground, width/2, -800, 800, 800);
+    image(imgBrickBackground, width/2, -800, 800, 800);
     
+    // Temporary Player Rectangle
     rect(intPlayerX, intPlayerY, 40, 40);
     
-    
+    // For loop to for a counter for the array length. 
     for (int intOrcCounter = 0; intOrcCounter < fltOrcY.length; intOrcCounter++) {
       // if statement to set the blnOrcHideStatus for each of the Orcs to false.
       if (blnOrcHideStatus[intOrcCounter] == false) { 
+        // if statement to draw the orc image while standing still.
         if (blnOrcMoving[intOrcCounter] == false) {
           image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
         }
-        
+        // if statement to when the player reaches the view distance of the orc.
         if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcViewDistance) {
           
-          
+          // if statement for orc left movement animation.
           if (blnOrcMoving[intOrcCounter] && blnOrcMoveLeft[intOrcCounter] && !blnOrcMoveRight[intOrcCounter]) {
             blnOrcMoveRight[intOrcCounter] = false;
 
-            if (intMoveTick > intTakeStep) {
+            if (intMoveTick[intOrcCounter] > intTakeStep[intOrcCounter]) {
               blnStep[intOrcCounter] = !blnStep[intOrcCounter];
-              intMoveTick = 0;
+              intMoveTick[intOrcCounter] = 0;
             }
 
             if (blnStep[intOrcCounter]) {
@@ -171,12 +182,12 @@ public class Sketch2 extends PApplet {
             else {
               image(imgOrcLeft2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
             }
-            
           }
+          // if statement for orc right movement animation and sets the right image to false.
           if (blnOrcMoving[intOrcCounter] && blnOrcMoveRight[intOrcCounter]) {
-            if (intMoveTick > intTakeStep) {
+            if (intMoveTick[intOrcCounter] > intTakeStep[intOrcCounter]) {
               blnStep[intOrcCounter] = !blnStep[intOrcCounter];
-              intMoveTick = 0;
+              intMoveTick[intOrcCounter] = 0;
             }
 
             if (blnStep[intOrcCounter]) {
@@ -191,24 +202,7 @@ public class Sketch2 extends PApplet {
 
           }
           
-          /*
-          else if (blnOrcMoving[intOrcCounter] && blnOrcMoveRight) {
-            if (intMoveTick > intTakeStep) {
-              blnStep = !blnStep;
-              intMoveTick = 0;
-            }
-
-            if (blnStep) {
-              image(imgOrcRight1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-            }
-            else {
-              image(imgOrcRight2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-            }
-          }
-          */
-          
-          
-
+          // if statements to move the orc in the direction of the player triggering the movement animations.
           if(intPlayerX < fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
             
             fltOrcX[intOrcCounter] -= intOrcSpeed;
@@ -216,7 +210,7 @@ public class Sketch2 extends PApplet {
             
             blnOrcMoving[intOrcCounter] = true;
             blnOrcMoveLeft[intOrcCounter] = true;
-            intMoveTick++;
+            intMoveTick[intOrcCounter]++;
             
           }
           if (intPlayerX < fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter]) {
@@ -225,7 +219,7 @@ public class Sketch2 extends PApplet {
 
             blnOrcMoving[intOrcCounter] = true;
             blnOrcMoveLeft[intOrcCounter] = true;
-            intMoveTick++;
+            intMoveTick[intOrcCounter]++;
           }
           if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
             fltOrcX[intOrcCounter] += intOrcSpeed;
@@ -233,7 +227,7 @@ public class Sketch2 extends PApplet {
 
             blnOrcMoving[intOrcCounter] = true;
             blnOrcMoveRight[intOrcCounter] = true;
-            intMoveTick++;
+            intMoveTick[intOrcCounter]++;
           }
           if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter])  {
             fltOrcX[intOrcCounter] += intOrcSpeed;
@@ -241,13 +235,25 @@ public class Sketch2 extends PApplet {
 
             blnOrcMoving[intOrcCounter] = true;
             blnOrcMoveRight[intOrcCounter] = true;
-            intMoveTick++;
+            intMoveTick[intOrcCounter]++;
+            
           }
+          // if statement to detect the distance between the orcs attack range and the players location.
           if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcAttackRange) {
-
+            if (intPlayerX < fltOrcY[intOrcCounter]) {
+              
+            }
+            
           }
+
+
+
+
         }
-        
+
+
+
+        // else statement to set all the orc movement variables to false.
         else {
           blnOrcMoving[intOrcCounter] = false;
           blnOrcMoveDown[intOrcCounter] = false;
@@ -281,42 +287,42 @@ public class Sketch2 extends PApplet {
       intWorldX += intPlayerSpeed;
     }
     
-    
+    // if statement to move the player when the dash key (spacebar) is pressed.
     if (blnDashPressed == true && blnDashReady == true) {
       blnDashReady = false;
     
       if (blnWPressed == true){
-        intPlayerY -= 10;
+        intPlayerY -= intDashDistance;
       }
       if (blnAPressed == true){
-        intPlayerX -= 10;
+        intPlayerX -= intDashDistance;
       }
       if (blnSPressed == true){
-        intPlayerY += 10;
+        intPlayerY += intDashDistance;
       }
       if (blnDPressed == true){
-        intPlayerX += 10;
+        intPlayerX += intDashDistance;
       }
       if (blnWPressed == true && blnAPressed == true){
-        intPlayerX -= 10;
-        intPlayerY -= 10;
+        intPlayerX -= intDashDistance;
+        intPlayerY -= intDashDistance;
       }
       if (blnWPressed == true && blnDPressed == true){
-        intPlayerX += 10;
-        intPlayerY -= 10;
+        intPlayerX += intDashDistance;
+        intPlayerY -= intDashDistance;
       }
       if (blnSPressed == true && blnAPressed == true){
-        intPlayerX -= 10;
-        intPlayerY += 10;
+        intPlayerX -= intDashDistance;
+        intPlayerY += intDashDistance;
       }
       if (blnSPressed == true && blnDPressed == true){
-        intPlayerX += 10;
-        intPlayerX += 10;
+        intPlayerX += intDashDistance;
+        intPlayerX += intDashDistance;
       }
       
     }
     
-
+    // if statement for a 3 second dash cooldown.
     if (blnDashReady == false) {
       if (frameCount % 180 == 0) {
         blnDashReady = true;
@@ -332,6 +338,7 @@ public class Sketch2 extends PApplet {
     
   }
   
+  // Player movement method.
   public void keyPressed() {
     if (key == 'w' || key == 'W') {
       blnWPressed = true;
@@ -358,6 +365,7 @@ public class Sketch2 extends PApplet {
     }
   }
 
+  // Player movement method.
   public void keyReleased() {
     if (key == 'w' || key == 'W') {
       blnWPressed = false;
