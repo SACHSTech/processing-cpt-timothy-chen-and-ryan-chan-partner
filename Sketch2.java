@@ -38,22 +38,34 @@ public class Sketch2 extends PApplet {
   PImage imgOrcRight2;
   PImage imgOrcUp1;
   PImage imgOrcUp2;
+  PImage imgCannonBall1;
+  PImage imgCannonBall2;
+  PImage imgTankExplode1;
+  PImage imgTankExplode2;
+  PImage imgTankExplode3;
+  PImage imgTankFaceLeft; 
+  PImage imgTankFaceRight;
+  PImage imgTankHitLeft;
+  PImage imgTankhitRight;
+
+  
+
 
   // Orc Variables
   float[] fltOrcX = new float[10];
   float[] fltOrcY = new float[10];
   boolean [] blnOrcHideStatus = new boolean[10];
-  float fltOrcHp = 100;
+  float[] fltOrcHp = new float[10];
   float fltOrcDirectionX;
   float fltOrcDirectionY;
   int intOrcViewDistance = 200;
   int intOrcAttackRange = 40;
   int intOrcSpeed = 2;
   int intOrcDamage;
-  int[] intMoveTick = new int[10];
-  int[] intTakeStep = new int[10];
-  int[] intAttackTick = new int[10];
-  int[] intAttackSwing = new int[10];
+  int[] intOrcMoveTick = new int[10];
+  int[] intOrcTakeStep = new int[10];
+  int[] intOrcAttackTick = new int[10];
+  int[] intOrcAttackSwing = new int[10];
   boolean[] blnOrcMoving = new boolean[10];
   boolean[] blnOrcMoveRight = new boolean[10];
   boolean[] blnOrcMoveLeft = new boolean[10];
@@ -61,7 +73,15 @@ public class Sketch2 extends PApplet {
   boolean[] blnOrcMoveDown = new boolean[10];
   boolean[] blnStep = new boolean[10];
 
-  
+  // Tank Boss Variables
+  int intTankX;
+  int intTankY;
+  int intTankViewDistance;
+  int intTankAttackDistance;
+  int intTankAttackDamage;
+  int intTankSpeed;
+  int intTankMoveTick;
+  int intTankMoving;
   
 
   // Background Images
@@ -97,6 +117,16 @@ public class Sketch2 extends PApplet {
     imgOrcUp2 = loadImage("orc_up_2.png");
     imgGrassBackground = loadImage("Grass background.jpg");
     imgBrickBackground = loadImage("Brick Background.jpg");
+    imgCannonBall1 = loadImage("Cannon Ball_1.png");
+    imgCannonBall2 = loadImage("Cannon Ball_2.png");
+    imgTankExplode1 = loadImage("Tank Explode_1.png");
+    imgTankExplode2 = loadImage("Tank Explode_2.png");
+    imgTankExplode3 = loadImage("Tank Explode_3.png");
+    imgTankFaceLeft = loadImage("Tank Face Left.png"); 
+    imgTankFaceRight = loadImage("Tank Face Right.png");
+    imgTankHitLeft = loadImage("Tank Hit Left.png");
+    imgTankhitRight = loadImage("Tank Hit Right.png");
+
   }
 
   /** 
@@ -138,10 +168,11 @@ public class Sketch2 extends PApplet {
       blnOrcMoveUp[intBooleanCount] = false;
       blnOrcMoveDown[intBooleanCount] = false;
       blnStep[intBooleanCount] = false;
-      intMoveTick[intBooleanCount] = 0;
-      intTakeStep[intBooleanCount] = 5;
-      intAttackTick[intBooleanCount] = 0;
-      intAttackSwing[intBooleanCount] = 5;
+      intOrcMoveTick[intBooleanCount] = 0;
+      intOrcTakeStep[intBooleanCount] = 5;
+      intOrcAttackTick[intBooleanCount] = 0;
+      intOrcAttackSwing[intBooleanCount] = 5;
+      fltOrcHp[intBooleanCount] = 100;
     }
   }
 
@@ -171,9 +202,9 @@ public class Sketch2 extends PApplet {
           if (blnOrcMoving[intOrcCounter] && blnOrcMoveLeft[intOrcCounter] && !blnOrcMoveRight[intOrcCounter]) {
             blnOrcMoveRight[intOrcCounter] = false;
 
-            if (intMoveTick[intOrcCounter] > intTakeStep[intOrcCounter]) {
+            if (intOrcMoveTick[intOrcCounter] > intOrcTakeStep[intOrcCounter]) {
               blnStep[intOrcCounter] = !blnStep[intOrcCounter];
-              intMoveTick[intOrcCounter] = 0;
+              intOrcMoveTick[intOrcCounter] = 0;
             }
 
             if (blnStep[intOrcCounter]) {
@@ -185,9 +216,9 @@ public class Sketch2 extends PApplet {
           }
           // if statement for orc right movement animation and sets the right image to false.
           if (blnOrcMoving[intOrcCounter] && blnOrcMoveRight[intOrcCounter]) {
-            if (intMoveTick[intOrcCounter] > intTakeStep[intOrcCounter]) {
+            if (intOrcMoveTick[intOrcCounter] > intOrcTakeStep[intOrcCounter]) {
               blnStep[intOrcCounter] = !blnStep[intOrcCounter];
-              intMoveTick[intOrcCounter] = 0;
+              intOrcMoveTick[intOrcCounter] = 0;
             }
 
             if (blnStep[intOrcCounter]) {
@@ -210,7 +241,7 @@ public class Sketch2 extends PApplet {
             
             blnOrcMoving[intOrcCounter] = true;
             blnOrcMoveLeft[intOrcCounter] = true;
-            intMoveTick[intOrcCounter]++;
+            intOrcMoveTick[intOrcCounter]++;
             
           }
           if (intPlayerX < fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter]) {
@@ -219,7 +250,7 @@ public class Sketch2 extends PApplet {
 
             blnOrcMoving[intOrcCounter] = true;
             blnOrcMoveLeft[intOrcCounter] = true;
-            intMoveTick[intOrcCounter]++;
+            intOrcMoveTick[intOrcCounter]++;
           }
           if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
             fltOrcX[intOrcCounter] += intOrcSpeed;
@@ -227,7 +258,7 @@ public class Sketch2 extends PApplet {
 
             blnOrcMoving[intOrcCounter] = true;
             blnOrcMoveRight[intOrcCounter] = true;
-            intMoveTick[intOrcCounter]++;
+            intOrcMoveTick[intOrcCounter]++;
           }
           if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter])  {
             fltOrcX[intOrcCounter] += intOrcSpeed;
@@ -235,21 +266,29 @@ public class Sketch2 extends PApplet {
 
             blnOrcMoving[intOrcCounter] = true;
             blnOrcMoveRight[intOrcCounter] = true;
-            intMoveTick[intOrcCounter]++;
+            intOrcMoveTick[intOrcCounter]++;
             
           }
           // if statement to detect the distance between the orcs attack range and the players location.
           if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcAttackRange) {
-            if (intPlayerX < fltOrcY[intOrcCounter]) {
+            if (intPlayerX < fltOrcY[intOrcCounter] && intPlayerY == fltOrcY[intOrcCounter]) {
+              blnOrcMoving[intOrcCounter] = false;
+              
+              image(imgOrcAttackUp1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+              if (frameCount % 60 == 0) {
+                image(imgOrcAttackUp2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+              }
               
             }
             
           }
+          
 
 
 
 
         }
+
 
 
 
@@ -262,11 +301,20 @@ public class Sketch2 extends PApplet {
           blnOrcMoveUp[intOrcCounter] = false;
         }
       }
+
+      for (int intTankCounter = 0; intTankCounter < fltOrcY.length; intTankCounter++) {
+        if (blnOrcHideStatus[intOrcCounter] == false) { 
+          // if statement to draw the orc image while standing still.
+          if (blnOrcMoving[intOrcCounter] == false) {
+            image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+          }
+        }
+      }
+      
+
+
+
     }
-    
-    
-
-
     
 
     // Player Movement
