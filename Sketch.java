@@ -1,10 +1,22 @@
 import processing.core.PApplet;
-import processing.core.PFont;
 import processing.core.PImage;
 
 public class Sketch extends PApplet {
 
+ // Global Variables
   int intMenuSelect; 
+  float fltPlayerHp;
+  float fltHpBar = 250;
+  boolean blnPlayerAlive;
+  
+  // Player Coord & Global Position cord
+  int intPlayerPosX;
+  int intPlayerPosY; 
+
+  int intGlobalX;
+  int intGlobalY;
+
+  // Ryan Code
   int intWorldX = 4800;
   int intWorldY = 4800;
   
@@ -21,29 +33,7 @@ public class Sketch extends PApplet {
   boolean blnDashReady = true;
   boolean blnDashPressed = false;
 
-  /** 
-   * Enumeration for the state of the game, menu vs gameply
-   * 
-   */
-	private enum STATE{
-    MENU,
-    GAME,
-    SELECTION,
-    QUIT
-  };
-
-  // Creates State variable to check what state the game is in based on
-  private STATE State = STATE.MENU;
-  
   // Orc Images
-  PImage imgOrcAttackDown1;
-  PImage imgOrcAttackDown2;
-  PImage imgOrcAttackLeft1;
-  PImage imgOrcAttackLeft2;
-  PImage imgOrcAttackRight1;
-  PImage imgOrcAttackRight2;
-  PImage imgOrcAttackUp1;
-  PImage imgOrcAttackUp2;
   PImage imgOrcDown1;
   PImage imgOrcDown2;
   PImage imgOrcLeft1;
@@ -61,10 +51,6 @@ public class Sketch extends PApplet {
   PImage imgTankFaceRight;
   PImage imgTankHitLeft;
   PImage imgTankhitRight;
-  
-
-  
-
 
   // Orc Variables
   float[] fltOrcX = new float[10];
@@ -76,17 +62,16 @@ public class Sketch extends PApplet {
   int intOrcViewDistance = 200;
   int intOrcAttackRange = 40;
   int intOrcSpeed = 4;
-  int intOrcDamage;
+  int intOrcDamage = 1;
   int[] intOrcMoveTick = new int[10];
   int[] intOrcTakeStep = new int[10];
-  int[] intOrcAttackTick = new int[10];
-  int[] intOrcAttackSwing = new int[10];
   boolean[] blnOrcMoving = new boolean[10];
   boolean[] blnOrcMoveRight = new boolean[10];
   boolean[] blnOrcMoveLeft = new boolean[10];
   boolean[] blnOrcMoveUp = new boolean[10];
   boolean[] blnOrcMoveDown = new boolean[10];
-  boolean[] blnStep = new boolean[10];
+  boolean[] blnOrcStep = new boolean[10];
+  
 
   // Tank Boss Variables
   int intTankX;
@@ -97,34 +82,64 @@ public class Sketch extends PApplet {
   int intTankSpeed;
   int intTankMoveTick;
   int intTankMoving;
+  boolean blnTankHideStatus;
+  boolean blnTankMoving;
   
-
   // Background Images
   PImage imgGrassBackground;
   PImage imgBrickBackground;
 
+  /** 
+   * Enumeration for the state of the game, menu vs gameply
+   * 
+   */
+	private enum STATE{
+    MENU,
+    GAME,
+    SELECTION,
+    QUIT
+  }
+  
+  // Creates State variable to check what state the game is in based on
+  private STATE State = STATE.MENU;
+
+  // Player Images
+  PImage imgPlayerUp1;
+  PImage imgPlayerUp2;
+  PImage imgPlayerLeft1;
+  PImage imgPlayerLeft2;
+  PImage imgPlayerRight1;
+  PImage imgPlayerRight2;
+  PImage imgPlayerDown1;
+  PImage imgPlayerDown2;
+
+
   // Title Background
   PImage imgTitleScreen;
-  
 	
   /**
    * Called once at the beginning of execution, put your size all in this method
-   */
+   */ 
   public void settings() {
-	// put your size call here
+    // put your size call here
     size(800, 800);
+    // Loading Titlescreen Image
+    imgTitleScreen = loadImage("titlebackground.jpg");
+
+    // Loading Player Images
+    imgPlayerUp1 = loadImage("player_up_1.png");
+    imgPlayerUp2 = loadImage("player_up_2.png");
+    imgPlayerLeft1 = loadImage("player_left_1.png");
+    imgPlayerLeft2 = loadImage("player_left_2.png");
+    imgPlayerRight1 = loadImage("player_right_1.png");
+    imgPlayerRight2 = loadImage("player_right_2.png");
+    imgPlayerDown1 = loadImage("player_down_1.png");
+    imgPlayerDown2 = loadImage("player_down_2.png");
+
+    // put your size call here
     intPlayerX = width/2;
     intPlayerY = height/2;
 
-    // Loading Mob images
-    imgOrcAttackDown1 = loadImage("orc_attack_down_1.png");
-    imgOrcAttackDown2 = loadImage("orc_attack_down_2.png");
-    imgOrcAttackLeft1 = loadImage("orc_attack_left_1.png");
-    imgOrcAttackLeft2 = loadImage("orc_attack_left_2.png");
-    imgOrcAttackRight1 = loadImage("orc_attack_right_1.png");
-    imgOrcAttackRight2 = loadImage("orc_attack_right_2.png");
-    imgOrcAttackUp1 = loadImage("orc_attack_up_1.png");
-    imgOrcAttackUp2 = loadImage("orc_attack_up_2.png");
     imgOrcDown1 = loadImage("orc_down_1.png");
     imgOrcDown2 = loadImage("orc_down_2.png");
     imgOrcLeft1 = loadImage("orc_left_1.png");
@@ -135,7 +150,6 @@ public class Sketch extends PApplet {
     imgOrcUp2 = loadImage("orc_up_2.png");
     imgGrassBackground = loadImage("Grass background.jpg");
     imgBrickBackground = loadImage("Brick Background.jpg");
-    imgTitleScreen = loadImage("titlebackground.jpg");
     imgCannonBall1 = loadImage("Cannon Ball_1.png");
     imgCannonBall2 = loadImage("Cannon Ball_2.png");
     imgTankExplode1 = loadImage("Tank Explode_1.png");
@@ -153,11 +167,17 @@ public class Sketch extends PApplet {
    * values here i.e background, stroke, fill etc.
    */
   public void setup() {
-    PFont mono;
-    mono = createFont("8bitoperator JVE", 50);
-    textFont(mono);
+    background(0, 0, 0);
+    imgTitleScreen.resize(800, 800);
+    imgPlayerUp1.resize(32, 32);
+    imgPlayerUp2.resize(32, 32);
+    imgPlayerLeft1.resize(32, 32);
+    imgPlayerLeft2.resize(32, 32);
+    imgPlayerRight1.resize(32, 32);
+    imgPlayerRight2.resize(32, 32);
+    imgPlayerDown1.resize(32, 32);
+    imgPlayerDown2.resize(32, 32);
 
-    if(State == STATE.GAME) {
     imageMode(CENTER);
     rectMode(CENTER);
     ellipseMode(CENTER);
@@ -170,12 +190,11 @@ public class Sketch extends PApplet {
     imgOrcRight2.resize(30, 30);
     imgOrcLeft1.resize(30, 30);
     imgOrcLeft2.resize(30, 30);
-    imgTitleScreen.resize(200, 200);
     
     
+
     image(imgGrassBackground, width/2, height/2, 800, 800);
     image(imgBrickBackground, width/2, -800, 800, 800);
-    
 
     for (int intOrcY = 0; intOrcY < fltOrcY.length; intOrcY++) {
       fltOrcY[intOrcY] = random(800);
@@ -193,14 +212,14 @@ public class Sketch extends PApplet {
       blnOrcMoveLeft[intBooleanCount] = false;
       blnOrcMoveUp[intBooleanCount] = false;
       blnOrcMoveDown[intBooleanCount] = false;
-      blnStep[intBooleanCount] = false;
+      blnOrcStep[intBooleanCount] = false;
       intOrcMoveTick[intBooleanCount] = 0;
       intOrcTakeStep[intBooleanCount] = 5;
-      intOrcAttackTick[intBooleanCount] = 0;
-      intOrcAttackSwing[intBooleanCount] = 5;
       fltOrcHp[intBooleanCount] = 100;
-      } 
     }
+
+    
+    
   }
 
   /**
@@ -208,66 +227,67 @@ public class Sketch extends PApplet {
    */
   public void draw() {
     if ((intMenuSelect == 1) && (keyCode == ENTER)){
+      background(255);
       State = STATE.GAME; 
     }
   
-  // Determines game state to be menu or game, changes screen depending on state, determines menu button select
-  if(State == STATE.MENU){
-  background(0);
-  image(imgTitleScreen, 0, 0);
-  if (keyPressed) {
-    if (keyCode == UP) {
-      intMenuSelect -= 1;
-      delay(100);
-      if (intMenuSelect < 1) {
-        intMenuSelect = 3;
+    // Determines game state to be menu or game, changes screen depending on state, determines menu button select
+    if(State == STATE.MENU){
+      background(0);
+      image(imgTitleScreen, width/2, height/2);
+      if (keyPressed) {
+        if (keyCode == UP) {
+          intMenuSelect -= 1;
+          delay(100);
+          if (intMenuSelect < 1) {
+            intMenuSelect = 3;
+          }
+        } 
+        else if (keyCode == DOWN) {
+          intMenuSelect += 1;
+          delay(100);
+          if (intMenuSelect > 3) {
+            intMenuSelect = 1;
+          }
+        }
       }
-    } else if (keyCode == DOWN) {
-      intMenuSelect += 1;
-      delay(100);
-      if (intMenuSelect > 3) {
-        intMenuSelect = 1;
+      
+      fill(0);
+      textSize(50);
+      text("PLAY", 330, 245);
+
+      fill(0);
+      textSize(50);
+      text("Character Selection", 180, 360);
+      
+      fill(0);
+      textSize(50);
+      text("QUIT", 330, 475);
+
+      if (intMenuSelect == 1) {
+        fill(255, 0, 0);
+        textSize(50);
+        text("PLAY", 330, 245);
+      } 
+      else {
+        if (intMenuSelect == 2) { 
+          fill(255, 0, 0);
+          textSize(50);
+          text("Character Selection", 180, 360);
+        } 
+        else {
+          if (intMenuSelect == 3) { 
+            fill(255, 0, 0);
+            textSize(50);
+            text("QUIT", 330, 475);
+          }
+        }
       }
     }
-  }
-  /*Font menuFont = new Font("8bitoperator JVE", Font.BOLD, 50);
-  setFont(M)
-  */
-  
-  fill(0);
-  textSize(50);
-  text("PLAY", 330, 245);
+    else { 
+      if(State == STATE.GAME){
 
-  fill(0);
-  textSize(50);
-  text("Character Selection", 180, 360);
-  
-  fill(0);
-  textSize(50);
-  text("QUIT", 330, 475);
-
-  if (intMenuSelect == 1) {
-  fill(97, 202, 255);
-  textSize(50);
-  text("PLAY", 330, 245);
-  } else {
-  if ( intMenuSelect == 2) { 
-  fill(97, 202, 255);
-  textSize(50);
-  text("Character Selection", 180, 360);
-  } else {
-  if (intMenuSelect == 3) { 
-  fill(97, 202, 255);
-  textSize(50);
-  text("QUIT", 330, 475);
-  }
-  
-  }
-
-  }
-    } else { 
-  if(State == STATE.GAME){
-    // Image Background
+        // Image Background
     image(imgGrassBackground, width/2, height/2, 800, 800);
     image(imgBrickBackground, width/2, -800, 800, 800);
     
@@ -290,11 +310,11 @@ public class Sketch extends PApplet {
             blnOrcMoveRight[intOrcCounter] = false;
 
             if (intOrcMoveTick[intOrcCounter] > intOrcTakeStep[intOrcCounter]) {
-              blnStep[intOrcCounter] = !blnStep[intOrcCounter];
+              blnOrcStep[intOrcCounter] = !blnOrcStep[intOrcCounter];
               intOrcMoveTick[intOrcCounter] = 0;
             }
 
-            if (blnStep[intOrcCounter]) {
+            if (blnOrcStep[intOrcCounter]) {
               image(imgOrcLeft1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
             }
             else {
@@ -304,11 +324,11 @@ public class Sketch extends PApplet {
           // if statement for orc right movement animation and sets the right image to false.
           if (blnOrcMoving[intOrcCounter] && blnOrcMoveRight[intOrcCounter]) {
             if (intOrcMoveTick[intOrcCounter] > intOrcTakeStep[intOrcCounter]) {
-              blnStep[intOrcCounter] = !blnStep[intOrcCounter];
+              blnOrcStep[intOrcCounter] = !blnOrcStep[intOrcCounter];
               intOrcMoveTick[intOrcCounter] = 0;
             }
 
-            if (blnStep[intOrcCounter]) {
+            if (blnOrcStep[intOrcCounter]) {
               image(imgOrcRight1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
             }
             else {
@@ -358,26 +378,9 @@ public class Sketch extends PApplet {
           }
           // if statement to detect the distance between the orcs attack range and the players location.
           if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcAttackRange) {
-            if (intPlayerX < fltOrcY[intOrcCounter] && intPlayerY == fltOrcY[intOrcCounter]) {
-              blnOrcMoving[intOrcCounter] = false;
-              
-              image(imgOrcAttackUp1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-              if (frameCount % 60 == 0) {
-                image(imgOrcAttackUp2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-              }
-              
-            }
-            
+            fltPlayerHp = fltPlayerHp- intOrcDamage;
           }
-          
-
-
-
-
         }
-
-
-
 
         // else statement to set all the orc movement variables to false.
         else {
@@ -390,20 +393,15 @@ public class Sketch extends PApplet {
       }
 
       for (int intTankCounter = 0; intTankCounter < fltOrcY.length; intTankCounter++) {
-        if (blnOrcHideStatus[intOrcCounter] == false) { 
+        if (blnTankHideStatus == false) { 
           // if statement to draw the orc image while standing still.
-          if (blnOrcMoving[intOrcCounter] == false) {
-            image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+          if (blnTankMoving == false) {
+            // image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
           }
         }
       }
-      
-
-
-
     }
     
-
     // Player Movement
     if (blnWPressed) {
       intPlayerY -= intPlayerSpeed;
@@ -454,7 +452,6 @@ public class Sketch extends PApplet {
         intPlayerX += intDashDistance;
         intPlayerX += intDashDistance;
       }
-      
     }
     
     // if statement for a 3 second dash cooldown.
@@ -463,55 +460,82 @@ public class Sketch extends PApplet {
         blnDashReady = true;
       }
     }
+
+
+
+
+
+
+        /*  if (fltCurrentHitPoints > 0){
+          blnPlayerAlive = true;
+        }
+        if (blnPlayerAlive = true) {
+          for(fltCurrentHitPoints > 0; fltCurrentHitPoints <=10)
+        }
+        */
+        
+        strokeWeight(2);
+        stroke(0);
+        noFill();
+        rect(525, 25, 250, 25);
+
+        fill(255, 0, 0);
+        rect(525, 25, fltHpBar, 25); 
+
+          
+      }
+    }
+  
+  }
+
+  // Player movement method.
+  public void keyPressed() {
+    if (key == 'w' || key == 'W') {
+      blnWPressed = true;
       
+      intWorldY--;
+    }
+    else if (key == 'a' || key == 'A') {
+      blnAPressed = true;
+     
+      intWorldX++;
+    }
+    else if (key == 's' || key == 'S'){
+      blnSPressed = true;
+      
+      intWorldY++;
+    }
+    else if (key == 'd' || key == 'D'){
+      blnDPressed = true;
+      
+      intWorldX--;
+    }   
+    if (key == ' ') {
+      blnDashPressed = true;
     }
   }
-  
-  }
- // Player movement method.
- public void keyPressed() {
-  if (key == 'w' || key == 'W') {
-    blnWPressed = true;
-    
-    intWorldY--;
-  }
-  else if (key == 'a' || key == 'A') {
-    blnAPressed = true;
-   
-    intWorldX++;
-  }
-  else if (key == 's' || key == 'S'){
-    blnSPressed = true;
-    
-    intWorldY++;
-  }
-  else if (key == 'd' || key == 'D'){
-    blnDPressed = true;
-    
-    intWorldX--;
-  }   
-  if (key == ' ') {
-    blnDashPressed = true;
-  }
-}
 
-// Player movement method.
-public void keyReleased() {
-  if (key == 'w' || key == 'W') {
-    blnWPressed = false;
+  // Player movement method.
+  public void keyReleased() {
+    if (key == 'w' || key == 'W') {
+      blnWPressed = false;
+    }
+    else if (key == 'a' || key == 'A') {
+      blnAPressed = false;
+    }
+    else if (key == 's' || key == 'S'){
+      blnSPressed = false;
+    }
+    else if (key == 'd' || key == 'D'){
+      blnDPressed = false;
+    } 
+    if (key == ' ') {
+      blnDashPressed = false;
+    }
   }
-  else if (key == 'a' || key == 'A') {
-    blnAPressed = false;
-  }
-  else if (key == 's' || key == 'S'){
-    blnSPressed = false;
-  }
-  else if (key == 'd' || key == 'D'){
-    blnDPressed = false;
-  } 
-  if (key == ' ') {
-    blnDashPressed = false;
-  }
+
+
+
 
 }
 
@@ -519,6 +543,6 @@ public void keyReleased() {
 
 
 
-}
+
 
 
