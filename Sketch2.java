@@ -71,7 +71,8 @@ public class Sketch2 extends PApplet {
   boolean[] blnOrcMoveLeft = new boolean[10];
   boolean[] blnOrcMoveUp = new boolean[10];
   boolean[] blnOrcMoveDown = new boolean[10];
-  boolean[] blnStep = new boolean[10];
+  boolean[] blnOrcStep = new boolean[10];
+  boolean[] blnOrcAttackUp = new boolean[10];
 
   // Tank Boss Variables
   int intTankX;
@@ -82,6 +83,8 @@ public class Sketch2 extends PApplet {
   int intTankSpeed;
   int intTankMoveTick;
   int intTankMoving;
+  boolean blnTankHideStatus;
+  boolean blnTankMoving;
   
 
   // Background Images
@@ -167,7 +170,8 @@ public class Sketch2 extends PApplet {
       blnOrcMoveLeft[intBooleanCount] = false;
       blnOrcMoveUp[intBooleanCount] = false;
       blnOrcMoveDown[intBooleanCount] = false;
-      blnStep[intBooleanCount] = false;
+      blnOrcStep[intBooleanCount] = false;
+      blnOrcAttackUp[intBooleanCount] = true;
       intOrcMoveTick[intBooleanCount] = 0;
       intOrcTakeStep[intBooleanCount] = 5;
       intOrcAttackTick[intBooleanCount] = 0;
@@ -203,11 +207,11 @@ public class Sketch2 extends PApplet {
             blnOrcMoveRight[intOrcCounter] = false;
 
             if (intOrcMoveTick[intOrcCounter] > intOrcTakeStep[intOrcCounter]) {
-              blnStep[intOrcCounter] = !blnStep[intOrcCounter];
+              blnOrcStep[intOrcCounter] = !blnOrcStep[intOrcCounter];
               intOrcMoveTick[intOrcCounter] = 0;
             }
 
-            if (blnStep[intOrcCounter]) {
+            if (blnOrcStep[intOrcCounter]) {
               image(imgOrcLeft1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
             }
             else {
@@ -217,11 +221,11 @@ public class Sketch2 extends PApplet {
           // if statement for orc right movement animation and sets the right image to false.
           if (blnOrcMoving[intOrcCounter] && blnOrcMoveRight[intOrcCounter]) {
             if (intOrcMoveTick[intOrcCounter] > intOrcTakeStep[intOrcCounter]) {
-              blnStep[intOrcCounter] = !blnStep[intOrcCounter];
+              blnOrcStep[intOrcCounter] = !blnOrcStep[intOrcCounter];
               intOrcMoveTick[intOrcCounter] = 0;
             }
 
-            if (blnStep[intOrcCounter]) {
+            if (blnOrcStep[intOrcCounter]) {
               image(imgOrcRight1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
             }
             else {
@@ -271,8 +275,10 @@ public class Sketch2 extends PApplet {
           }
           // if statement to detect the distance between the orcs attack range and the players location.
           if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcAttackRange) {
-            if (intPlayerX < fltOrcY[intOrcCounter] && intPlayerY == fltOrcY[intOrcCounter]) {
-              blnOrcMoving[intOrcCounter] = false;
+            if (intPlayerX < fltOrcX[intOrcCounter]) {
+              System.out.println("hi");
+              
+              blnOrcAttackUp[intOrcCounter] = true;
               
               image(imgOrcAttackUp1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
               if (frameCount % 60 == 0) {
@@ -282,6 +288,7 @@ public class Sketch2 extends PApplet {
             }
             
           }
+          
           
 
 
@@ -303,10 +310,10 @@ public class Sketch2 extends PApplet {
       }
 
       for (int intTankCounter = 0; intTankCounter < fltOrcY.length; intTankCounter++) {
-        if (blnOrcHideStatus[intOrcCounter] == false) { 
+        if (blnTankHideStatus == false) { 
           // if statement to draw the orc image while standing still.
-          if (blnOrcMoving[intOrcCounter] == false) {
-            image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+          if (blnTankMoving == false) {
+            // image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
           }
         }
       }
