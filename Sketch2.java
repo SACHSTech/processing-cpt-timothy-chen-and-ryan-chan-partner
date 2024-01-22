@@ -64,17 +64,21 @@ public class Sketch2 extends PApplet {
   PImage imgTankhitRight;
 
   // Tank Boss Variables
-  float fltTankHp = 100;
-  int intTankX = 400;
-  int intTankY = 200;
-  int intTankViewDistance;
-  int intTankAttackDistance;
+  int intTankHp = 100;
+  int intTankX = 700;
+  int intTankY = 400;
+  int intTankViewDistance = 600;
+  int intTankAttackDistance = 500;
   int intTankAttackDamage;
   int intTankSpeed;
   int intTankMoveTick;
   int intTankMoving;
+  int intTankHitBox = 110;
+  int intCannonBallX = intTankX - 50;
+  int intCannonBallY = intTankY - 50;
   boolean blnTankHideStatus;
   boolean blnTankMoving;
+  boolean blnTankAlive = true;
   boolean blnTankExplode1 = false;
   boolean blnTankExplode2 = false;
   boolean blnTankExplode3 = false;
@@ -135,6 +139,10 @@ public class Sketch2 extends PApplet {
     imgOrcRight2.resize(30, 30);
     imgOrcLeft1.resize(30, 30);
     imgOrcLeft2.resize(30, 30);
+    imgTankFaceLeft1.resize(150, 150);
+    imgCannonBall1.resize(20, 20);
+    imgCannonBall2.resize(20, 20);
+    
     
 
     image(imgGrassBackground, width/2, height/2, 800, 800);
@@ -176,141 +184,10 @@ public class Sketch2 extends PApplet {
     rect(intPlayerX, intPlayerY, intPlayerHitBox, intPlayerHitBox);
     
     // For loop to for a counter for the array length. 
-    for (int intOrcCounter = 0; intOrcCounter < fltOrcY.length; intOrcCounter++) {
-      // if statement to set the blnOrcHideStatus for each of the Orcs to false.
-      if (blnOrcHideStatus[intOrcCounter] == false) { 
-      
-        
-        // if statement to draw the orc image while standing still.
-        if (blnOrcMoving[intOrcCounter] == false) {
-          image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-        }
-        // if statement to when the player reaches the view distance of the orc.
-        if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcViewDistance) {
-          
-          // if statement for orc left movement animation.
-          if (blnOrcMoving[intOrcCounter] && blnOrcMoveLeft[intOrcCounter] && !blnOrcMoveRight[intOrcCounter]) {
-            blnOrcMoveRight[intOrcCounter] = false;
-
-            if (intOrcMoveTick[intOrcCounter] > intOrcTakeStep[intOrcCounter]) {
-              blnOrcStep[intOrcCounter] = !blnOrcStep[intOrcCounter];
-              intOrcMoveTick[intOrcCounter] = 0;
-            }
-
-            if (blnOrcStep[intOrcCounter]) {
-              image(imgOrcLeft1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-            }
-            else {
-              image(imgOrcLeft2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-            }
-          }
-          // if statement for orc right movement animation and sets the right image to false.
-          if (blnOrcMoving[intOrcCounter] && blnOrcMoveRight[intOrcCounter]) {
-            if (intOrcMoveTick[intOrcCounter] > intOrcTakeStep[intOrcCounter]) {
-              blnOrcStep[intOrcCounter] = !blnOrcStep[intOrcCounter];
-              intOrcMoveTick[intOrcCounter] = 0;
-            }
-
-            if (blnOrcStep[intOrcCounter]) {
-              image(imgOrcRight1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-            }
-            else {
-              image(imgOrcRight2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-            }
-            if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= 100) {
-              blnOrcMoveRight[intOrcCounter] = false;
-            }
-
-          }
-          
-          // if statements to move the orc in the direction of the player triggering the movement animations.
-          if(intPlayerX < fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
-            
-            fltOrcX[intOrcCounter] -= intOrcSpeed;
-            fltOrcY[intOrcCounter] -= intOrcSpeed;
-            
-            blnOrcMoving[intOrcCounter] = true;
-            blnOrcMoveLeft[intOrcCounter] = true;
-            intOrcMoveTick[intOrcCounter]++;
-            
-          }
-          if (intPlayerX < fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter]) {
-            fltOrcX[intOrcCounter] -= intOrcSpeed;
-            fltOrcY[intOrcCounter] += intOrcSpeed;
-
-            blnOrcMoving[intOrcCounter] = true;
-            blnOrcMoveLeft[intOrcCounter] = true;
-            intOrcMoveTick[intOrcCounter]++;
-          }
-          if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
-            fltOrcX[intOrcCounter] += intOrcSpeed;
-            fltOrcY[intOrcCounter] -= intOrcSpeed;
-
-            blnOrcMoving[intOrcCounter] = true;
-            blnOrcMoveRight[intOrcCounter] = true;
-            intOrcMoveTick[intOrcCounter]++;
-          }
-          if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter])  {
-            fltOrcX[intOrcCounter] += intOrcSpeed;
-            fltOrcY[intOrcCounter] += intOrcSpeed;
-
-            blnOrcMoving[intOrcCounter] = true;
-            blnOrcMoveRight[intOrcCounter] = true;
-            intOrcMoveTick[intOrcCounter]++;
-            
-          }
-          // if statement to detect the distance between the orcs attack range and the players location.
-          if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcAttackRange) {
-            // intPlayerHp - intOrcDamage;
-          }
-          if (fltOrcHp[intOrcCounter] == 0) {
-            blnOrcHideStatus[intOrcCounter] = true;
-          }
-        }
-      }
-        
-
-      // else statement to set all the orc movement variables to false.
-      else {
-        blnOrcMoving[intOrcCounter] = false;
-        blnOrcMoveDown[intOrcCounter] = false;
-        blnOrcMoveLeft[intOrcCounter] = false;
-        blnOrcMoveRight[intOrcCounter] = false;
-        blnOrcMoveUp[intOrcCounter] = false;
-      }
-    }      
+    Orc();
+    Tank();
+    playerDash();
     
-
-    // Tank Code
-    for (int intTankCounter = 0; intTankCounter < fltOrcY.length; intTankCounter++) {
-      if (blnTankHideStatus == false) { 
-        // if statement to draw the orc image while standing still.
-          
-        if (blnTankMoving == false) {
-          image(imgTankFaceLeft1, intTankX, intTankY);
-
-        }
-        if (dist(intPlayerX, intPlayerY, intTankX, intTankY) <= 400) {
-          fltTankHp--;
-          System.out.println(fltTankHp);
-          
-        }
-        if (fltTankHp <= 0) {
-          fltTankHp = 0;
-          blnTankMoving = true;
-          if (blnTankExplode1) {
-            
-          }
-        }
-        
-        
-      }
-      
-      
-    }
-    
-    
-
     // Player Movement
     if (blnWPressed) {
       intPlayerY -= intPlayerSpeed;
@@ -329,48 +206,241 @@ public class Sketch2 extends PApplet {
       intWorldX += intPlayerSpeed;
     }
     
-    // if statement to move the player when the dash key (spacebar) is pressed.
-    if (blnDashPressed == true && blnDashReady == true) {
-      blnDashReady = false;
     
-      if (blnWPressed == true){
-        intPlayerY -= intDashDistance;
+
+    
+
+      
+    }
+
+    public void Orc() {
+      for (int intOrcCounter = 0; intOrcCounter < fltOrcY.length; intOrcCounter++) {
+        // if statement to set the blnOrcHideStatus for each of the Orcs to false.
+        if (blnOrcHideStatus[intOrcCounter] == false) { 
+          
+          
+          // if statement to draw the orc image while standing still.
+          if (blnOrcMoving[intOrcCounter] == false) {
+            image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+          }
+          // if statement to when the player reaches the view distance of the orc.
+          if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcViewDistance) {
+            
+            // if statement for orc left movement animation.
+            if (blnOrcMoving[intOrcCounter] && blnOrcMoveLeft[intOrcCounter] && !blnOrcMoveRight[intOrcCounter]) {
+              blnOrcMoveRight[intOrcCounter] = false;
+  
+              if (intOrcMoveTick[intOrcCounter] > intOrcTakeStep[intOrcCounter]) {
+                blnOrcStep[intOrcCounter] = !blnOrcStep[intOrcCounter];
+                intOrcMoveTick[intOrcCounter] = 0;
+              }
+  
+              if (blnOrcStep[intOrcCounter]) {
+                image(imgOrcLeft1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+              }
+              else {
+                image(imgOrcLeft2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+              }
+            }
+            // if statement for orc right movement animation and sets the right image to false.
+            if (blnOrcMoving[intOrcCounter] && blnOrcMoveRight[intOrcCounter]) {
+              if (intOrcMoveTick[intOrcCounter] > intOrcTakeStep[intOrcCounter]) {
+                blnOrcStep[intOrcCounter] = !blnOrcStep[intOrcCounter];
+                intOrcMoveTick[intOrcCounter] = 0;
+              }
+  
+              if (blnOrcStep[intOrcCounter]) {
+                image(imgOrcRight1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+              }
+              else {
+                image(imgOrcRight2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
+              }
+              if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= 100) {
+                blnOrcMoveRight[intOrcCounter] = false;
+              }
+  
+            }
+            
+            // if statements to move the orc in the direction of the player triggering the movement animations.
+            if(intPlayerX < fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
+              
+              fltOrcX[intOrcCounter] -= intOrcSpeed;
+              fltOrcY[intOrcCounter] -= intOrcSpeed;
+              
+              blnOrcMoving[intOrcCounter] = true;
+              blnOrcMoveLeft[intOrcCounter] = true;
+              intOrcMoveTick[intOrcCounter]++;
+              
+            }
+            if (intPlayerX < fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter]) {
+              fltOrcX[intOrcCounter] -= intOrcSpeed;
+              fltOrcY[intOrcCounter] += intOrcSpeed;
+  
+              blnOrcMoving[intOrcCounter] = true;
+              blnOrcMoveLeft[intOrcCounter] = true;
+              intOrcMoveTick[intOrcCounter]++;
+            }
+            if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY < fltOrcY[intOrcCounter]) {
+              fltOrcX[intOrcCounter] += intOrcSpeed;
+              fltOrcY[intOrcCounter] -= intOrcSpeed;
+  
+              blnOrcMoving[intOrcCounter] = true;
+              blnOrcMoveRight[intOrcCounter] = true;
+              intOrcMoveTick[intOrcCounter]++;
+            }
+            if (intPlayerX > fltOrcX[intOrcCounter] && intPlayerY > fltOrcY[intOrcCounter])  {
+              fltOrcX[intOrcCounter] += intOrcSpeed;
+              fltOrcY[intOrcCounter] += intOrcSpeed;
+  
+              blnOrcMoving[intOrcCounter] = true;
+              blnOrcMoveRight[intOrcCounter] = true;
+              intOrcMoveTick[intOrcCounter]++;
+              
+            }
+            // if statement to detect the distance between the orcs attack range and the players location.
+            if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcAttackRange) {
+              // intPlayerHp - intOrcDamage;
+            }
+            if (fltOrcHp[intOrcCounter] == 0) {
+              blnOrcHideStatus[intOrcCounter] = true;
+            }
+          }
+        
+          
+  
+        // else statement to set all the orc movement variables to false.
+          else {
+            blnOrcMoving[intOrcCounter] = false;
+            blnOrcMoveDown[intOrcCounter] = false;
+            blnOrcMoveLeft[intOrcCounter] = false;
+            blnOrcMoveRight[intOrcCounter] = false;
+            blnOrcMoveUp[intOrcCounter] = false;
+          }
+        }
       }
-      if (blnAPressed == true){
-        intPlayerX -= intDashDistance;
+    }
+
+    
+    public void Tank() {
+      // Tank Code
+      for (int intTankCounter = 0; intTankCounter < fltOrcY.length; intTankCounter++) {
+        if (blnTankHideStatus == false) { 
+            
+            // if statement to draw the orc image while standing still.
+              
+            if (blnTankMoving == false) {
+              rect(intTankX, intTankY, intTankHitBox, intTankHitBox);
+              image(imgTankFaceLeft1, intTankX, intTankY);
+            }
+            if (dist(intPlayerX, intPlayerY, intTankX, intTankY) <= intTankViewDistance) {
+              if (dist(intPlayerX, intPlayerY, intTankX, intTankY) > intTankAttackDistance) {
+                
+                
+                if (intPlayerX < intTankX) {
+                  intTankX--;
+                }
+                
+              }
+              if (dist(intPlayerX, intPlayerY, intTankX, intTankY) <= intTankAttackDistance) {
+                
+                  if (dist(intPlayerX, intPlayerY, intCannonBallX, intCannonBallY) <= intTankAttackDistance) {
+                    
+                    image(imgCannonBall1, intCannonBallX, intCannonBallY);
+                  }
+                  
+                
+              }
+            }
+            if (dist(intPlayerX, intPlayerY, intTankX, intTankY) <= intTankHitBox - 20) {
+              
+              System.out.println(dist(intPlayerX, intPlayerY, intTankX, intTankY) <= intTankHitBox - 20);
+              
+            }
+              
+              
+            
+            
+            if (intTankHp <= 0) {
+                
+              blnTankAlive = false;
+              
+              if (blnTankAlive == false) {
+              
+                blnTankExplode1 = true;
+                
+                if (frameCount % 120 == 0) {
+                  blnTankExplode2 = true;
+                  blnTankExplode1 = false;
+                  System.out.println("bob");
+                }
+
+                if (frameCount % 240 == 0) {
+                  blnTankExplode3 = true;
+                  blnTankExplode2 = false;
+                  System.out.println("joe");
+                }
+              }
+            }
+          
+          
+        }
+        if (blnTankExplode1 == true) {
+          image(imgTankExplode1, intTankX, intTankY);
+        }
+        if (blnTankExplode2 == true) {
+          image(imgTankExplode2, intTankX, intTankY);
+        }
+        if (blnTankExplode3 == true) {
+          image(imgTankExplode3, intTankX, intTankY);
+        }
+        
       }
-      if (blnSPressed == true){
-        intPlayerY += intDashDistance;
+    }
+
+    public void playerDash() {
+      // if statement to move the player when the dash key (spacebar) is pressed.
+      if (blnDashPressed == true && blnDashReady == true) {
+        blnDashReady = false;
+      
+        if (blnWPressed == true){
+          intPlayerY -= intDashDistance;
+        }
+        if (blnAPressed == true){
+          intPlayerX -= intDashDistance;
+        }
+        if (blnSPressed == true){
+          intPlayerY += intDashDistance;
+        }
+        if (blnDPressed == true){
+          intPlayerX += intDashDistance;
+        }
+        if (blnWPressed == true && blnAPressed == true){
+          intPlayerX -= intDashDistance;
+          intPlayerY -= intDashDistance;
+        }
+        if (blnWPressed == true && blnDPressed == true){
+          intPlayerX += intDashDistance;
+          intPlayerY -= intDashDistance;
+        }
+        if (blnSPressed == true && blnAPressed == true){
+          intPlayerX -= intDashDistance;
+          intPlayerY += intDashDistance;
+        }
+        if (blnSPressed == true && blnDPressed == true){
+          intPlayerX += intDashDistance;
+          intPlayerX += intDashDistance;
+        }
       }
-      if (blnDPressed == true){
-        intPlayerX += intDashDistance;
-      }
-      if (blnWPressed == true && blnAPressed == true){
-        intPlayerX -= intDashDistance;
-        intPlayerY -= intDashDistance;
-      }
-      if (blnWPressed == true && blnDPressed == true){
-        intPlayerX += intDashDistance;
-        intPlayerY -= intDashDistance;
-      }
-      if (blnSPressed == true && blnAPressed == true){
-        intPlayerX -= intDashDistance;
-        intPlayerY += intDashDistance;
-      }
-      if (blnSPressed == true && blnDPressed == true){
-        intPlayerX += intDashDistance;
-        intPlayerX += intDashDistance;
+      
+      
+      // if statement for a 3 second dash cooldown.
+      if (blnDashReady == false) {
+        if (frameCount % 180 == 0) {
+          blnDashReady = true;
+        }
       }
     }
     
-    
-    // if statement for a 3 second dash cooldown.
-    if (blnDashReady == false) {
-      if (frameCount % 180 == 0) {
-        blnDashReady = true;
-      }
-    }
-  }
   
   // Player movement method.
   public void keyPressed() {

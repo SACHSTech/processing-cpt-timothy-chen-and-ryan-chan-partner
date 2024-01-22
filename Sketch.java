@@ -378,7 +378,7 @@ public class Sketch extends PApplet {
           }
           // if statement to detect the distance between the orcs attack range and the players location.
           if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcAttackRange) {
-            fltPlayerHp = fltPlayerHp- intOrcDamage;
+            fltPlayerHp = fltPlayerHp - intOrcDamage;
           }
         }
 
