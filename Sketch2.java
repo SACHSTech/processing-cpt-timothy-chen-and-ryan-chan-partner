@@ -3,7 +3,6 @@ import processing.core.PImage;
 
 public class Sketch2 extends PApplet {
 	
-
   int intWorldX = 4800;
   int intWorldY = 4800;
   
@@ -13,6 +12,7 @@ public class Sketch2 extends PApplet {
   int intPlayerSpeed = 8;
   int intDashCooldown = 0;
   int intDashDistance = 20;
+  int intPlayerHitBox = 40;
   boolean blnWPressed;
   boolean blnAPressed; 
   boolean blnSPressed;
@@ -20,16 +20,7 @@ public class Sketch2 extends PApplet {
   boolean blnDashReady = true;
   boolean blnDashPressed = false;
 
-  
   // Orc Images
-  PImage imgOrcAttackDown1;
-  PImage imgOrcAttackDown2;
-  PImage imgOrcAttackLeft1;
-  PImage imgOrcAttackLeft2;
-  PImage imgOrcAttackRight1;
-  PImage imgOrcAttackRight2;
-  PImage imgOrcAttackUp1;
-  PImage imgOrcAttackUp2;
   PImage imgOrcDown1;
   PImage imgOrcDown2;
   PImage imgOrcLeft1;
@@ -38,6 +29,28 @@ public class Sketch2 extends PApplet {
   PImage imgOrcRight2;
   PImage imgOrcUp1;
   PImage imgOrcUp2;
+
+  // Orc Variables
+  float[] fltOrcX = new float[10];
+  float[] fltOrcY = new float[10];
+  float[] fltOrcHp = new float[10];
+  float fltOrcDirectionX;
+  float fltOrcDirectionY;
+  int intOrcViewDistance = 200;
+  int intOrcAttackRange = 40;
+  int intOrcSpeed = 4;
+  int intOrcDamage;
+  int[] intOrcMoveTick = new int[10];
+  int[] intOrcTakeStep = new int[10];
+  boolean [] blnOrcHideStatus = new boolean[10];
+  boolean[] blnOrcMoving = new boolean[10];
+  boolean[] blnOrcMoveRight = new boolean[10];
+  boolean[] blnOrcMoveLeft = new boolean[10];
+  boolean[] blnOrcMoveUp = new boolean[10];
+  boolean[] blnOrcMoveDown = new boolean[10];
+  boolean[] blnOrcStep = new boolean[10];
+  
+  // Tank Image Variables
   PImage imgCannonBall1;
   PImage imgCannonBall2;
   PImage imgTankExplode1;
@@ -48,35 +61,10 @@ public class Sketch2 extends PApplet {
   PImage imgTankHitLeft;
   PImage imgTankhitRight;
 
-  
-
-
-  // Orc Variables
-  float[] fltOrcX = new float[10];
-  float[] fltOrcY = new float[10];
-  boolean [] blnOrcHideStatus = new boolean[10];
-  float[] fltOrcHp = new float[10];
-  float fltOrcDirectionX;
-  float fltOrcDirectionY;
-  int intOrcViewDistance = 200;
-  int intOrcAttackRange = 40;
-  int intOrcSpeed = 4;
-  int intOrcDamage;
-  int[] intOrcMoveTick = new int[10];
-  int[] intOrcTakeStep = new int[10];
-  int[] intOrcAttackTick = new int[10];
-  int[] intOrcAttackSwing = new int[10];
-  boolean[] blnOrcMoving = new boolean[10];
-  boolean[] blnOrcMoveRight = new boolean[10];
-  boolean[] blnOrcMoveLeft = new boolean[10];
-  boolean[] blnOrcMoveUp = new boolean[10];
-  boolean[] blnOrcMoveDown = new boolean[10];
-  boolean[] blnOrcStep = new boolean[10];
-  boolean[] blnOrcAttackUp = new boolean[10];
-
   // Tank Boss Variables
-  int intTankX;
-  int intTankY;
+  float fltTankHp = 100;
+  int intTankX = 400;
+  int intTankY = -200;
   int intTankViewDistance;
   int intTankAttackDistance;
   int intTankAttackDamage;
@@ -87,10 +75,10 @@ public class Sketch2 extends PApplet {
   boolean blnTankMoving;
   
 
+  
   // Background Images
   PImage imgGrassBackground;
   PImage imgBrickBackground;
-  
 	
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -101,15 +89,6 @@ public class Sketch2 extends PApplet {
     intPlayerX = width/2;
     intPlayerY = height/2;
 
-
-    imgOrcAttackDown1 = loadImage("orc_attack_down_1.png");
-    imgOrcAttackDown2 = loadImage("orc_attack_down_2.png");
-    imgOrcAttackLeft1 = loadImage("orc_attack_left_1.png");
-    imgOrcAttackLeft2 = loadImage("orc_attack_left_2.png");
-    imgOrcAttackRight1 = loadImage("orc_attack_right_1.png");
-    imgOrcAttackRight2 = loadImage("orc_attack_right_2.png");
-    imgOrcAttackUp1 = loadImage("orc_attack_up_1.png");
-    imgOrcAttackUp2 = loadImage("orc_attack_up_2.png");
     imgOrcDown1 = loadImage("orc_down_1.png");
     imgOrcDown2 = loadImage("orc_down_2.png");
     imgOrcLeft1 = loadImage("orc_left_1.png");
@@ -171,12 +150,10 @@ public class Sketch2 extends PApplet {
       blnOrcMoveUp[intBooleanCount] = false;
       blnOrcMoveDown[intBooleanCount] = false;
       blnOrcStep[intBooleanCount] = false;
-      blnOrcAttackUp[intBooleanCount] = true;
       intOrcMoveTick[intBooleanCount] = 0;
       intOrcTakeStep[intBooleanCount] = 5;
-      intOrcAttackTick[intBooleanCount] = 0;
-      intOrcAttackSwing[intBooleanCount] = 5;
       fltOrcHp[intBooleanCount] = 100;
+
     }
   }
 
@@ -189,7 +166,7 @@ public class Sketch2 extends PApplet {
     image(imgBrickBackground, width/2, -800, 800, 800);
     
     // Temporary Player Rectangle
-    rect(intPlayerX, intPlayerY, 40, 40);
+    rect(intPlayerX, intPlayerY, intPlayerHitBox, intPlayerHitBox);
     
     // For loop to for a counter for the array length. 
     for (int intOrcCounter = 0; intOrcCounter < fltOrcY.length; intOrcCounter++) {
@@ -275,29 +252,10 @@ public class Sketch2 extends PApplet {
           }
           // if statement to detect the distance between the orcs attack range and the players location.
           if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcAttackRange) {
-            if (intPlayerX < fltOrcX[intOrcCounter]) {
-              System.out.println("hi");
-              
-              blnOrcAttackUp[intOrcCounter] = true;
-              
-              image(imgOrcAttackUp1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-              if (frameCount % 60 == 0) {
-                image(imgOrcAttackUp2, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-              }
-              
-            }
-            
+            // intPlayerHp - intOrcDamage;
           }
-          
-          
-
-
-
-
         }
-
-
-
+        
 
         // else statement to set all the orc movement variables to false.
         else {
@@ -307,23 +265,25 @@ public class Sketch2 extends PApplet {
           blnOrcMoveRight[intOrcCounter] = false;
           blnOrcMoveUp[intOrcCounter] = false;
         }
-      }
+      }      
+    }
 
-      for (int intTankCounter = 0; intTankCounter < fltOrcY.length; intTankCounter++) {
-        if (blnTankHideStatus == false) { 
-          // if statement to draw the orc image while standing still.
-          if (blnTankMoving == false) {
-            // image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
-          }
+    // Tank Code
+    for (int intTankCounter = 0; intTankCounter < fltOrcY.length; intTankCounter++) {
+      if (blnTankHideStatus == false) { 
+        // if statement to draw the orc image while standing still.
+          image(imgTankFaceLeft, 40, 40);
+        if (blnTankMoving == false) {
+          // image(imgOrcDown1, fltOrcX[intTankCounter], fltOrcY[intTankCounter]);
         }
+
+        if (fltTankHp == 0) {
+
+        }
+        
       }
-      
-
-
-
     }
     
-
     // Player Movement
     if (blnWPressed) {
       intPlayerY -= intPlayerSpeed;
@@ -374,8 +334,8 @@ public class Sketch2 extends PApplet {
         intPlayerX += intDashDistance;
         intPlayerX += intDashDistance;
       }
-      
     }
+    
     
     // if statement for a 3 second dash cooldown.
     if (blnDashReady == false) {
@@ -383,14 +343,6 @@ public class Sketch2 extends PApplet {
         blnDashReady = true;
       }
     }
-
-    
-    
-
-    
-    
-    
-    
   }
   
   // Player movement method.
@@ -437,7 +389,6 @@ public class Sketch2 extends PApplet {
     if (key == ' ') {
       blnDashPressed = false;
     }
-
   }
 
     

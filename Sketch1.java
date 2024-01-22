@@ -1,5 +1,4 @@
 import processing.core.PApplet;
-import processing.core.PFont;
 import processing.core.PImage;
 
 public class Sketch1 extends PApplet {
@@ -30,7 +29,7 @@ public class Sketch1 extends PApplet {
     GAME,
     SELECTION,
     QUIT
-  };
+  }
 
   // Creates State variable to check what state the game is in based on
   private STATE State = STATE.MENU;
@@ -52,7 +51,7 @@ public class Sketch1 extends PApplet {
    * Called once at the beginning of execution, put your size all in this method
    */ 
   public void settings() {
-	// put your size call here
+	  // put your size call here
     size(800, 800);
     // Loading Titlescreen Image
     imgTitleScreen = loadImage("titlebackground.jpg");
@@ -85,12 +84,7 @@ public class Sketch1 extends PApplet {
     imgPlayerDown1.resize(32, 32);
     imgPlayerDown2.resize(32, 32);
 
-    PFont mono;
-    mono = createFont("8bitoperator JVE", 50);
-    textFont(mono);
-    /*Font menuFont = new Font("8bitoperator JVE", Font.BOLD, 50);
-    setFont(M)
-    */
+   
   }
 
   /**
@@ -102,78 +96,82 @@ public class Sketch1 extends PApplet {
       State = STATE.GAME; 
     }
   
-  // Determines game state to be menu or game, changes screen depending on state, determines menu button select
-  if(State == STATE.MENU){
-  background(0);
-  image(imgTitleScreen, 0, 0);
-  if (keyPressed) {
-    if (keyCode == UP) {
-      intMenuSelect -= 1;
-      delay(100);
-      if (intMenuSelect < 1) {
-        intMenuSelect = 3;
+    // Determines game state to be menu or game, changes screen depending on state, determines menu button select
+    if(State == STATE.MENU){
+      background(0);
+      image(imgTitleScreen, 0, 0);
+      if (keyPressed) {
+        if (keyCode == UP) {
+          intMenuSelect -= 1;
+          delay(100);
+          if (intMenuSelect < 1) {
+            intMenuSelect = 3;
+          }
+        } 
+        else if (keyCode == DOWN) {
+          intMenuSelect += 1;
+          delay(100);
+          if (intMenuSelect > 3) {
+            intMenuSelect = 1;
+          }
+        }
       }
-    } else if (keyCode == DOWN) {
-      intMenuSelect += 1;
-      delay(100);
-      if (intMenuSelect > 3) {
-        intMenuSelect = 1;
-      }
-    }
-  }
-  
-  fill(0);
-  textSize(50);
-  text("PLAY", 330, 245);
-
-  fill(0);
-  textSize(50);
-  text("Character Selection", 180, 360);
-  
-  fill(0);
-  textSize(50);
-  text("QUIT", 330, 475);
-
-  if (intMenuSelect == 1) {
-  fill(255, 0, 0);
-  textSize(50);
-  text("PLAY", 330, 245);
-  } else {
-  if ( intMenuSelect == 2) { 
-  fill(255, 0, 0);
-  textSize(50);
-  text("Character Selection", 180, 360);
-  } else {
-  if (intMenuSelect == 3) { 
-  fill(255, 0, 0);
-  textSize(50);
-  text("QUIT", 330, 475);
-  }
-  
-  }
-
-  }
-    } else { 
-  if(State == STATE.GAME){
- /*  if (fltCurrentHitPoints > 0){
-    blnPlayerAlive = true;
-  }
-  if (blnPlayerAlive = true) {
-    for(fltCurrentHitPoints > 0; fltCurrentHitPoints <=10)
-  }
-  */
-  fltHpBarPercent = fltCurrentHitPoints / fltTotalHitPoints;
-  strokeWeight(2);
-  stroke(0);
-  noFill();
-  rect(525, 25, 250, 25);
-
-  fill(255, 0, 0);
-  rect(525, 25, fltHpBar * fltHpBarPercent, 25); 
-
       
+      fill(0);
+      textSize(50);
+      text("PLAY", 330, 245);
+
+      fill(0);
+      textSize(50);
+      text("Character Selection", 180, 360);
+      
+      fill(0);
+      textSize(50);
+      text("QUIT", 330, 475);
+
+      if (intMenuSelect == 1) {
+        fill(255, 0, 0);
+        textSize(50);
+        text("PLAY", 330, 245);
+      } 
+      else {
+        if (intMenuSelect == 2) { 
+          fill(255, 0, 0);
+          textSize(50);
+          text("Character Selection", 180, 360);
+        } 
+        else {
+          if (intMenuSelect == 3) { 
+            fill(255, 0, 0);
+            textSize(50);
+            text("QUIT", 330, 475);
+          }
+      
+        }
+
+      }
     }
-  }
+    else { 
+      if(State == STATE.GAME){
+        /*  if (fltCurrentHitPoints > 0){
+          blnPlayerAlive = true;
+        }
+        if (blnPlayerAlive = true) {
+          for(fltCurrentHitPoints > 0; fltCurrentHitPoints <=10)
+        }
+        */
+        fltHpBarPercent = fltCurrentHitPoints / fltTotalHitPoints;
+        strokeWeight(2);
+        stroke(0);
+        noFill();
+        rect(525, 25, 250, 25);
+
+        fill(255, 0, 0);
+        rect(525, 25, fltHpBar * fltHpBarPercent, 25); 
+
+          
+      }
+    }
   
   }
   
