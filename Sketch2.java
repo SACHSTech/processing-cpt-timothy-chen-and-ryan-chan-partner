@@ -56,15 +56,17 @@ public class Sketch2 extends PApplet {
   PImage imgTankExplode1;
   PImage imgTankExplode2;
   PImage imgTankExplode3;
-  PImage imgTankFaceLeft; 
-  PImage imgTankFaceRight;
+  PImage imgTankFaceLeft1; 
+  PImage imgTankFaceLeft2; 
+  PImage imgTankFaceRight1;
+  PImage imgTankFaceRight2;
   PImage imgTankHitLeft;
   PImage imgTankhitRight;
 
   // Tank Boss Variables
   float fltTankHp = 100;
   int intTankX = 400;
-  int intTankY = -200;
+  int intTankY = 200;
   int intTankViewDistance;
   int intTankAttackDistance;
   int intTankAttackDamage;
@@ -73,6 +75,9 @@ public class Sketch2 extends PApplet {
   int intTankMoving;
   boolean blnTankHideStatus;
   boolean blnTankMoving;
+  boolean blnTankExplode1 = false;
+  boolean blnTankExplode2 = false;
+  boolean blnTankExplode3 = false;
   
 
   
@@ -104,8 +109,10 @@ public class Sketch2 extends PApplet {
     imgTankExplode1 = loadImage("Tank Explode_1.png");
     imgTankExplode2 = loadImage("Tank Explode_2.png");
     imgTankExplode3 = loadImage("Tank Explode_3.png");
-    imgTankFaceLeft = loadImage("Tank Face Left.png"); 
-    imgTankFaceRight = loadImage("Tank Face Right.png");
+    imgTankFaceLeft1 = loadImage("Tank Face Left_1.png"); 
+    imgTankFaceLeft2 = loadImage("Tank Face Left_2.png");
+    imgTankFaceRight1 = loadImage("Tank Face Right_1.png");
+    imgTankFaceRight2 = loadImage("Tank Face Right_2.png");
     imgTankHitLeft = loadImage("Tank Hit Left.png");
     imgTankhitRight = loadImage("Tank Hit Right.png");
 
@@ -172,6 +179,8 @@ public class Sketch2 extends PApplet {
     for (int intOrcCounter = 0; intOrcCounter < fltOrcY.length; intOrcCounter++) {
       // if statement to set the blnOrcHideStatus for each of the Orcs to false.
       if (blnOrcHideStatus[intOrcCounter] == false) { 
+      
+        
         // if statement to draw the orc image while standing still.
         if (blnOrcMoving[intOrcCounter] == false) {
           image(imgOrcDown1, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]);
@@ -254,36 +263,54 @@ public class Sketch2 extends PApplet {
           if (dist(intPlayerX, intPlayerY, fltOrcX[intOrcCounter], fltOrcY[intOrcCounter]) <= intOrcAttackRange) {
             // intPlayerHp - intOrcDamage;
           }
+          if (fltOrcHp[intOrcCounter] == 0) {
+            blnOrcHideStatus[intOrcCounter] = true;
+          }
         }
+      }
         
 
-        // else statement to set all the orc movement variables to false.
-        else {
-          blnOrcMoving[intOrcCounter] = false;
-          blnOrcMoveDown[intOrcCounter] = false;
-          blnOrcMoveLeft[intOrcCounter] = false;
-          blnOrcMoveRight[intOrcCounter] = false;
-          blnOrcMoveUp[intOrcCounter] = false;
-        }
-      }      
-    }
+      // else statement to set all the orc movement variables to false.
+      else {
+        blnOrcMoving[intOrcCounter] = false;
+        blnOrcMoveDown[intOrcCounter] = false;
+        blnOrcMoveLeft[intOrcCounter] = false;
+        blnOrcMoveRight[intOrcCounter] = false;
+        blnOrcMoveUp[intOrcCounter] = false;
+      }
+    }      
+    
 
     // Tank Code
     for (int intTankCounter = 0; intTankCounter < fltOrcY.length; intTankCounter++) {
       if (blnTankHideStatus == false) { 
         // if statement to draw the orc image while standing still.
-          image(imgTankFaceLeft, 40, 40);
+          
         if (blnTankMoving == false) {
-          // image(imgOrcDown1, fltOrcX[intTankCounter], fltOrcY[intTankCounter]);
+          image(imgTankFaceLeft1, intTankX, intTankY);
+
         }
-
-        if (fltTankHp == 0) {
-
+        if (dist(intPlayerX, intPlayerY, intTankX, intTankY) <= 400) {
+          fltTankHp--;
+          System.out.println(fltTankHp);
+          
+        }
+        if (fltTankHp <= 0) {
+          fltTankHp = 0;
+          blnTankMoving = true;
+          if (blnTankExplode1) {
+            
+          }
         }
         
+        
       }
+      
+      
     }
     
+    
+
     // Player Movement
     if (blnWPressed) {
       intPlayerY -= intPlayerSpeed;
