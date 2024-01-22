@@ -60,7 +60,7 @@ public class Sketch2 extends PApplet {
   float fltOrcDirectionY;
   int intOrcViewDistance = 200;
   int intOrcAttackRange = 40;
-  int intOrcSpeed = 2;
+  int intOrcSpeed = 4;
   int intOrcDamage;
   int[] intOrcMoveTick = new int[10];
   int[] intOrcTakeStep = new int[10];
