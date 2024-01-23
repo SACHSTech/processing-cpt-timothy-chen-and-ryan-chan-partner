@@ -13,13 +13,16 @@ public class Sketch1 extends PApplet {
   float fltPlayerHp;
   float fltHpBar = 300;
   boolean blnPlayerAlive;
+  int intHpBar = 300;
+
   // Player Variables
-  int intPlayerPosX;
-  int intPlayerPosY; 
+  int intPlayerX;
+  int intPlayerY; 
   int intPlayerR; 
+  int intPlayerHitBox = 40;
 
   // Speed
-  int intPlayerS;
+  int intPlayerSpeed = 8;
     
   // Variables to confirm player movement
   boolean blnFaceRight = false;
@@ -60,9 +63,13 @@ public class Sketch1 extends PApplet {
   PImage imgPlayerDown1;
   PImage imgPlayerDown2;
 
-
   // Title Background
   PImage imgTitleScreen;
+
+  // Other Images
+  PImage imgSwordBeam;
+  PImage imgHollowPurple;
+
   /**
    * Called once at the beginning of execution, put your size all in this method
    */ 
@@ -82,6 +89,10 @@ public class Sketch1 extends PApplet {
     imgPlayerRight2 = loadImage("player_right_2.png");
     imgPlayerDown1 = loadImage("player_down_1.png");
     imgPlayerDown2 = loadImage("player_down_2.png");
+
+    // Loading other images
+    imgSwordBeam = loadImage("weaponbeam.png");
+    imgHollowPurple = loadImage("bowlingballofdeath.png");
 
   }
 
@@ -103,7 +114,8 @@ public class Sketch1 extends PApplet {
     imgPlayerRight2.resize(32, 32);
     imgPlayerDown1.resize(32, 32);
     imgPlayerDown2.resize(32, 32);
-
+    imgSwordBeam.resize(16, 16);
+    imgHollowPurple.resize(64, 64);
   }
 
   /**
@@ -169,12 +181,10 @@ public class Sketch1 extends PApplet {
 
     } else {    
   if(State == STATE.GAME) {
-    Player();
-    Player(width / 2, height / 2, 32);
+
     playerDirection();
-  /*while(blnPlayerAlive != false) {
-  }*/
-  healthBar();
+    healthBar();
+
     }
   }
 }
@@ -184,100 +194,164 @@ public void healthBar() {
   strokeWeight(2);
   stroke(0);
   noFill();
-  rect(50, 25, 250, 15);
+  rect(175, 50, 300, 20);
 
   fill(255, 0, 0);
-  rect(50, 25, fltHpBar, 15);  
+  rect(175, 50, intHpBar, 20); 
+
+  if(intHpBar > 0) {
+    blnPlayerAlive = true;
+  } 
+  else if (intHpBar <= 0) {
+    blnPlayerAlive = false;
+    if(blnPlayerAlive == false) { 
+      text("GAME OVER", CENTER, CENTER);
+    }
   }
+  if ((intHpBar > 0) && (blnPlayerAlive == true)) {
+    if (dist(intPlayerX, intPlayerY, intPlayerHitBox, intPlayerHitBox) < 5) {
+      // intHpBar -= intOrcDamage;  (in other code)
+
+    }
+  }
+}
   // define other methods down here. 
-
-  public void Player() { 
-    intPlayerPosX = width / 2;
-    intPlayerPosX = height / 2; 
-    intPlayerR = 32;
+  public void mousePressed() {
+    
   }
+ /*  public void weaponAtk() {
+    int intWeaponBeamSpeed = 4; 
+    boolean blnWeaponCast; 
 
-  public void Player(int intPosX, int intPosY, int intRadius) {
-    this.intPlayerPosX = intPosX;
-    this.intPlayerPosX = intPosX;
-    intPlayerR = intRadius; 
-  }
+    if (intWeaponSelect == 1) {
+      if (mousePressed) { 
+        image(imgSwordBeam, intPlayerX, intPlayerY);
+
+        if (intPlayerX < mouseX) {
+          while (intPlayerX < mouseX) {
+            intPlayerX += intWeaponBeamSpeed;
+          }
+        }
+        else if (intPlayerX > mouseX) {
+          while (intPlayerX > mouseX) {
+            intPlayerX -= intWeaponBeamSpeed;
+          } 
+        } 
+        else if (intPlayerY < mouseY) {
+          while (intPlayerY < mouseY) {
+            intPlayerY += intWeaponBeamSpeed;
+          }
+        } 
+        else if (intPlayerY > mouseY) {
+          while (intPlayerY > mouseY) {
+            intPlayerY -= intWeaponBeamSpeed;
+          }
+        }
+      }
+    }
+    else if (intWeaponSelect == 2) {
+
+    }
+
+  } */
 
   public void playerDirection() {
     // Determines if player is facing right, if it is facing right, animate player moving right images
     if (!blnMoving) {
       if (blnFaceDown) {
-        image(imgPlayerDown1, intPlayerPosX, intPlayerPosY);
+        image(imgPlayerDown1, intPlayerX, intPlayerY);
       } 
       else if (blnFaceLeft) {
-        image(imgPlayerLeft1, intPlayerPosX, intPlayerPosY);
+        image(imgPlayerLeft1, intPlayerX, intPlayerY);
       }
       else if (blnFaceRight) {
-        image(imgPlayerRight1, intPlayerPosX, intPlayerPosY);
+        image(imgPlayerRight1, intPlayerX, intPlayerY);
       }
       else if (blnFaceUp) {
-        image(imgPlayerUp1, intPlayerPosX, intPlayerPosY);
+        image(imgPlayerUp1, intPlayerX, intPlayerY);
       }
     }
-    
     else if (blnMoving && blnMovingUp) {
       if (intPlayerMoveTick > intStepLength) {
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
       }
+        
       
-      if (blnStep) {
-        image(imgPlayerUp1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      if (blnStep) 
+      {
+        image(imgPlayerUp1, intPlayerX, intPlayerY);
       }
-      else { 
-        image(imgPlayerUp2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      else 
+      { 
+        image(imgPlayerUp2, intPlayerX, intPlayerY);
       }
     }
+
     // Determines if player is facing left, if it is facing leftt, animate player moving left images
-    else if (blnMoving && blnMovingDown) {
-      if (intPlayerMoveTick > intStepLength) {
+    else if (blnMoving && blnMovingDown) 
+    {
+      if (intPlayerMoveTick > intStepLength)
+      {
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
       }
 
-      if (blnStep) {
-        image(imgPlayerDown1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
-      }
-      else {
-        image(imgPlayerDown2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
-      }
-    }
-    // Determines if player is facing down, if it is facing down, animate player moving down images
-    else if (blnMoving && blnMovingLeft) {
-      if (intPlayerMoveTick > intStepLength) {
-        blnStep = !blnStep;
-        intPlayerMoveTick = 0;
-      }
-
-      if (blnStep) {
-        image(imgPlayerDown1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      if (blnStep)
+      {
+        image(imgPlayerDown1, intPlayerX, intPlayerY);
       }
       else 
       {
-        image(imgPlayerDown2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+        image(imgPlayerDown2, intPlayerX, intPlayerY);
       }
     }
-    // Determines if player is facing up, if it is facing up, animate player moving down images
-    else if (blnMoving && blnMovingRight) {
-      if (intPlayerMoveTick > intStepLength) {
+    // Determines if player is facing down, if it is facing down, animate player moving down images
+    else if (blnMoving && blnMovingLeft) 
+    {
+      if (intPlayerMoveTick > intStepLength)
+      {
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
       }
 
-      if (blnStep) {
-        image(imgPlayerRight1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      if (blnStep)
+      {
+        image(imgPlayerLeft1, intPlayerX, intPlayerY);
       }
-      else {
-        image(imgPlayerRight2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      else 
+      {
+        image(imgPlayerLeft2, intPlayerX, intPlayerY);
+      }
+    }
+    // Determines if player is facing up, if it is facing up, animate player moving down images
+    else if (blnMoving && blnMovingRight) 
+    {
+      if (intPlayerMoveTick > intStepLength)
+      {
+        blnStep = !blnStep;
+        intPlayerMoveTick = 0;
+      }
+
+      if (blnStep)
+      {
+        image(imgPlayerRight1, intPlayerX, intPlayerY);
+      }
+      else 
+      {
+        image(imgPlayerRight2, intPlayerX, intPlayerY);
       }
     }
   }
+
+  public void hollowPurple() {
+    /*if(keyPressed == "/") {
+
+    }/* */
+
+  } 
 }
+
 
 
 

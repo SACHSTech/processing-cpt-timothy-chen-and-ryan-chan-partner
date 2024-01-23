@@ -6,8 +6,9 @@ public class Sketch extends PApplet {
  // Global Variables
   int intMenuSelect; 
   float fltPlayerHp;
-  float fltHpBar = 250;
+  int intHpBar = 300;
   boolean blnPlayerAlive;
+  int intPlayerHitBox = 40; 
   
    // Variables to confirm player movement
   boolean blnFaceRight = false;
@@ -327,35 +328,41 @@ public class Sketch extends PApplet {
         Orc();
         Tank();
         playerDash();
-
-    
-
-
-
-
-
-
-        /*  if (fltCurrentHitPoints > 0){
-          blnPlayerAlive = true;
-        }
-        if (blnPlayerAlive = true) {
-          for(fltCurrentHitPoints > 0; fltCurrentHitPoints <=10)
-        }
-        */
-        
-        strokeWeight(2);
-        stroke(0);
-        noFill();
-        rect(525, 25, 250, 25);
-
-        fill(255, 0, 0);
-        rect(525, 25, fltHpBar, 25); 
-
+        healthBar();
           
       }
     }
   
   }
+
+  public void healthBar() {
+    strokeWeight(2);
+    stroke(0);
+    noFill();
+    rect(175, 50, 300, 20);
+
+    fill(255, 0, 0);
+    rect(175, 50, intHpBar, 20); 
+
+    if(intHpBar > 0) {
+      blnPlayerAlive = true;
+    } 
+    else if (intHpBar <= 0) {
+      blnPlayerAlive = false;
+      if(blnPlayerAlive == false) { 
+        text("GAME OVER", CENTER, CENTER);
+      }
+    }
+    if ((intHpBar > 0) && (blnPlayerAlive == true)) {
+      /*  if (dist(intPlayerX, intPlayerY, fltOrcX, fltOrcY) < 5) {
+         Player loses hp
+         intHpBar -= whatever attack damage
+        intHpBar -= intOrcDamage;
+
+      } */
+    }
+  }
+
 
   public void Orc() {
       for (int intOrcCounter = 0; intOrcCounter < fltOrcY.length; intOrcCounter++) {
