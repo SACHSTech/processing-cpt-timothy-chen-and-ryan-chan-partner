@@ -22,9 +22,15 @@ public class Sketch1 extends PApplet {
   int intPlayerS;
     
   // Variables to confirm player movement
-  boolean blnFaceR = true;
+  boolean blnFaceRight = false;
+  boolean blnFaceUp = false;
+  boolean blnFaceLeft = false;
   boolean blnFaceDown = true;
-  boolean blnIdle = true;
+  boolean blnMoving = false;
+  boolean blnMovingLeft = false;
+  boolean blnMovingRight = false;
+  boolean blnMovingDown = false;
+  boolean blnMovingUp = false;
 
   // Counts the ticks of the character moving to sync the animation
   int intPlayerMoveTick = 0;
@@ -199,51 +205,56 @@ public void healthBar() {
 
   public void playerDirection() {
     // Determines if player is facing right, if it is facing right, animate player moving right images
-    if (blnFaceR) 
-    {
-      if(intPlayerMoveTick > intStepLength) 
-      {
+    if (!blnMoving) {
+      if (blnFaceDown) {
+        image(imgPlayerDown1, intPlayerPosX, intPlayerPosY);
+      } 
+      else if (blnFaceLeft) {
+        image(imgPlayerLeft1, intPlayerPosX, intPlayerPosY);
+      }
+      else if (blnFaceRight) {
+        image(imgPlayerRight1, intPlayerPosX, intPlayerPosY);
+      }
+      else if (blnFaceUp) {
+        image(imgPlayerUp1, intPlayerPosX, intPlayerPosY);
+      }
+    }
+    
+    else if (blnMoving && blnMovingUp) {
+      if (intPlayerMoveTick > intStepLength) {
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
       }
-      if (blnStep) 
-      {
-        image(imgPlayerRight1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      
+      if (blnStep) {
+        image(imgPlayerUp1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
       }
-      else 
-      { 
-        image(imgPlayerRight2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      else { 
+        image(imgPlayerUp2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
       }
     }
     // Determines if player is facing left, if it is facing leftt, animate player moving left images
-    else if (!blnFaceR) 
-    {
-      if (intPlayerMoveTick > intStepLength)
-      {
+    else if (blnMoving && blnMovingDown) {
+      if (intPlayerMoveTick > intStepLength) {
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
       }
 
-      if (blnStep)
-      {
-        image(imgPlayerLeft1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      if (blnStep) {
+        image(imgPlayerDown1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
       }
-      else 
-      {
-        image(imgPlayerLeft2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      else {
+        image(imgPlayerDown2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
       }
     }
     // Determines if player is facing down, if it is facing down, animate player moving down images
-    else if (blnFaceDown) 
-    {
-      if (intPlayerMoveTick > intStepLength)
-      {
+    else if (blnMoving && blnMovingLeft) {
+      if (intPlayerMoveTick > intStepLength) {
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
       }
 
-      if (blnStep)
-      {
+      if (blnStep) {
         image(imgPlayerDown1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
       }
       else 
@@ -252,21 +263,17 @@ public void healthBar() {
       }
     }
     // Determines if player is facing up, if it is facing up, animate player moving down images
-    else if (!blnFaceDown) 
-    {
-      if (intPlayerMoveTick > intStepLength)
-      {
+    else if (blnMoving && blnMovingRight) {
+      if (intPlayerMoveTick > intStepLength) {
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
       }
 
-      if (blnStep)
-      {
-        image(imgPlayerUp1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      if (blnStep) {
+        image(imgPlayerRight1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
       }
-      else 
-      {
-        image(imgPlayerUp2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      else {
+        image(imgPlayerRight2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
       }
     }
   }
