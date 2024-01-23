@@ -18,18 +18,27 @@ public class Sketch1 extends PApplet {
   int intWeaponYSpeed = 1;
   int intSwordY = 350;
   int intWandY = 390;
+  int intHpBar = 300;
+
   // Player Variables
-  int intPlayerPosX;
-  int intPlayerPosY; 
+  int intPlayerX;
+  int intPlayerY; 
   int intPlayerR; 
+  int intPlayerHitBox = 40;
 
   // Speed
-  int intPlayerS;
+  int intPlayerSpeed = 8;
     
   // Variables to confirm player movement
-  boolean blnFaceR = true;
+  boolean blnFaceRight = false;
+  boolean blnFaceUp = false;
+  boolean blnFaceLeft = false;
   boolean blnFaceDown = true;
-  boolean blnIdle = true;
+  boolean blnMoving = false;
+  boolean blnMovingLeft = false;
+  boolean blnMovingRight = false;
+  boolean blnMovingDown = false;
+  boolean blnMovingUp = false;
 
   // Counts the ticks of the character moving to sync the animation
   int intPlayerMoveTick = 0;
@@ -59,7 +68,6 @@ public class Sketch1 extends PApplet {
   PImage imgPlayerDown1;
   PImage imgPlayerDown2;
 
-
   // Title Background
   PImage imgTitleScreen;
 
@@ -69,6 +77,9 @@ public class Sketch1 extends PApplet {
   PImage imgWandS2;
   PImage imgSwordSelected;
   PImage imgWandSelected;
+  // Other Images
+  PImage imgSwordBeam;
+  PImage imgHollowPurple;
 
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -98,6 +109,10 @@ public class Sketch1 extends PApplet {
     imgPlayerDown1 = loadImage("player_down_1.png");
     imgPlayerDown2 = loadImage("player_down_2.png");
 
+    // Loading other images
+    imgSwordBeam = loadImage("weaponbeam.png");
+    imgHollowPurple = loadImage("bowlingballofdeath.png");
+
   }
 
   /** 
@@ -123,7 +138,8 @@ public class Sketch1 extends PApplet {
     imgPlayerRight2.resize(32, 32);
     imgPlayerDown1.resize(32, 32);
     imgPlayerDown2.resize(32, 32);
-
+    imgSwordBeam.resize(16, 16);
+    imgHollowPurple.resize(64, 64);
   }
 
   /**
@@ -178,38 +194,38 @@ public class Sketch1 extends PApplet {
   textSize(50);
   text("QUIT", 330, 475);
 
-
+  // Draws the first menu text button (Play)
   if (intMenuSelect == 1) {
 
   fill(255, 0, 0);
   textSize(50);
   text("PLAY", 330, 245);
 
-    } else {
-  if ( intMenuSelect == 2) { 
+  // Draws the second menu text button (Weapon Selection)
+  } 
+  else if ( intMenuSelect == 2) { 
 
   fill(255, 0, 0);
   textSize(50);
   text("Weapon Selection", 180, 360);
 
-    } else {
-  if (intMenuSelect == 3) {
+  // Draws the third menu text button (Quit)
+  } 
+  else if (intMenuSelect == 3) {
 
   fill(255, 0, 0);
   textSize(50);
   text("QUIT", 330, 475);
   }
-}
 
-}
 
- } 
- else if(State == STATE.GAME) {
-    Player();
-    Player(width / 2, height / 2, 32);
+ }
+  // Determines if it is game state, uses methods to draw game
+  else if(State == STATE.GAME) {
     playerDirection();
     healthBar();
   }
+  // Determines if it is selection state, draws selection objects
   else if (State == STATE.SELECTION) {
     image(imgSelectScreen, 0, 0, 800, 800); 
     image(imgSwordS1, 200, intSwordY);
@@ -241,10 +257,10 @@ public class Sketch1 extends PApplet {
       }
       else if (intWeaponSelect == 2) {
         image(imgWandSelected, 430, intWandY);
-        }
       }
+    }
   }
- }
+}
   // define other methods down here. 
   public void healthBar() {
     // Creates Hp Bar
@@ -283,56 +299,57 @@ public class Sketch1 extends PApplet {
      }
     }
 
-  public void Player() { 
-    intPlayerPosX = width / 2;
-    intPlayerPosX = height / 2; 
-    intPlayerR = 32;
-  }
-
-  public void Player(int intPosX, int intPosY, int intRadius) {
-    this.intPlayerPosX = intPosX;
-    this.intPlayerPosX = intPosX;
-    intPlayerR = intRadius; 
-  }
-
+  // define other methods down here. 
   public void playerDirection() {
     // Determines if player is facing right, if it is facing right, animate player moving right images
-    if (blnFaceR) 
-    {
-      if(intPlayerMoveTick > intStepLength) 
-      {
+    if (!blnMoving) {
+      if (blnFaceDown) {
+        image(imgPlayerDown1, intPlayerX, intPlayerY);
+      } 
+      else if (blnFaceLeft) {
+        image(imgPlayerLeft1, intPlayerX, intPlayerY);
+      }
+      else if (blnFaceRight) {
+        image(imgPlayerRight1, intPlayerX, intPlayerY);
+      }
+      else if (blnFaceUp) {
+        image(imgPlayerUp1, intPlayerX, intPlayerY);
+      }
+    }
+    else if (blnMoving && blnMovingUp) {
+      if (intPlayerMoveTick > intStepLength) {
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
       }
       if (blnStep) 
       {
-        image(imgPlayerRight1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+        image(imgPlayerUp1, intPlayerX, intPlayerY);
       }
       else 
       { 
-        image(imgPlayerRight2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+        image(imgPlayerUp2, intPlayerX, intPlayerY);
       }
     }
+
     // Determines if player is facing left, if it is facing leftt, animate player moving left images
-    else if (!blnFaceR) 
+    else if (blnMoving && blnMovingDown) 
     {
       if (intPlayerMoveTick > intStepLength)
       {
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
       }
-
       if (blnStep)
       {
-        image(imgPlayerLeft1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+        image(imgPlayerDown1, intPlayerX, intPlayerY);
       }
       else 
       {
-        image(imgPlayerLeft2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+        image(imgPlayerDown2, intPlayerX, intPlayerY);
       }
     }
     // Determines if player is facing down, if it is facing down, animate player moving down images
-    else if (blnFaceDown) 
+    else if (blnMoving && blnMovingLeft) 
     {
       if (intPlayerMoveTick > intStepLength)
       {
@@ -342,15 +359,15 @@ public class Sketch1 extends PApplet {
 
       if (blnStep)
       {
-        image(imgPlayerDown1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+        image(imgPlayerLeft1, intPlayerX, intPlayerY);
       }
       else 
       {
-        image(imgPlayerDown2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+        image(imgPlayerLeft2, intPlayerX, intPlayerY);
       }
     }
     // Determines if player is facing up, if it is facing up, animate player moving down images
-    else if (!blnFaceDown) 
+    else if (blnMoving && blnMovingRight) 
     {
       if (intPlayerMoveTick > intStepLength)
       {
@@ -360,15 +377,23 @@ public class Sketch1 extends PApplet {
 
       if (blnStep)
       {
-        image(imgPlayerUp1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+        image(imgPlayerRight1, intPlayerX, intPlayerY);
       }
       else 
       {
-        image(imgPlayerUp2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+        image(imgPlayerRight2, intPlayerX, intPlayerY);
       }
     }
   }
+
+  public void hollowPurple() {
+    /*if(keyPressed == "/") {
+
+    }/* */
+
+  } 
 }
+
 
 
 
