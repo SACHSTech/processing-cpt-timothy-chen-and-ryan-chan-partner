@@ -10,16 +10,24 @@ public class Sketch1 extends PApplet {
 
   // Global Variables
   int intMenuSelect; 
-  float fltPlayerHp;
+  int intPlayerHp = 10;
   float fltHpBar = 300;
   boolean blnPlayerAlive;
+  // Defining variables for weapon animation and selection
+  int intWeaponSelect;
+  int intWeaponYSpeed = 1;
+  int intSwordY = 350;
+  int intWandY = 390;
+  int intHpBar = 300;
+
   // Player Variables
-  int intPlayerPosX;
-  int intPlayerPosY; 
+  int intPlayerX;
+  int intPlayerY; 
   int intPlayerR; 
+  int intPlayerHitBox = 40;
 
   // Speed
-  int intPlayerS;
+  int intPlayerSpeed = 8;
     
   // Variables to confirm player movement
   boolean blnFaceRight = false;
@@ -60,9 +68,19 @@ public class Sketch1 extends PApplet {
   PImage imgPlayerDown1;
   PImage imgPlayerDown2;
 
-
   // Title Background
   PImage imgTitleScreen;
+
+  // Selection menu objects
+  PImage imgSelectScreen;
+  PImage imgSwordS1;
+  PImage imgWandS2;
+  PImage imgSwordSelected;
+  PImage imgWandSelected;
+  // Other Images
+  PImage imgSwordBeam;
+  PImage imgHollowPurple;
+
   /**
    * Called once at the beginning of execution, put your size all in this method
    */ 
@@ -72,6 +90,14 @@ public class Sketch1 extends PApplet {
 
     // Loading Titlescreen Image
     imgTitleScreen = loadImage("titlebackground.jpg");
+
+    // Loading Selection menu object Images
+    imgSelectScreen = loadImage("selectionbg.jpg");
+    imgSwordS1 = loadImage("swords1.png");
+    imgWandS2 = loadImage("wands2.png");
+    imgSwordSelected = loadImage("swordSelected.png");
+    imgWandSelected = loadImage("wandSelected.png");
+
 
     // Loading Player Images
     imgPlayerUp1 = loadImage("player_up_1.png");
@@ -83,6 +109,10 @@ public class Sketch1 extends PApplet {
     imgPlayerDown1 = loadImage("player_down_1.png");
     imgPlayerDown2 = loadImage("player_down_2.png");
 
+    // Loading other images
+    imgSwordBeam = loadImage("weaponbeam.png");
+    imgHollowPurple = loadImage("bowlingballofdeath.png");
+
   }
 
   /** 
@@ -92,9 +122,14 @@ public class Sketch1 extends PApplet {
   public void setup() {
     // Sets background colour
     background(0, 0, 0);
-
+    frameRate(60);
     // Resizes the loaded images
+    imgSelectScreen.resize(800, 800);
     imgTitleScreen.resize(800, 800);
+    imgSwordS1.resize(256, 256);
+    imgWandS2.resize(128, 128);
+    imgSwordSelected.resize(256, 256);
+    imgWandSelected.resize(128, 128);
     imgPlayerUp1.resize(32, 32);
     imgPlayerUp2.resize(32, 32);
     imgPlayerLeft1.resize(32, 32);
@@ -103,7 +138,8 @@ public class Sketch1 extends PApplet {
     imgPlayerRight2.resize(32, 32);
     imgPlayerDown1.resize(32, 32);
     imgPlayerDown2.resize(32, 32);
-
+    imgSwordBeam.resize(16, 16);
+    imgHollowPurple.resize(64, 64);
   }
 
   /**
@@ -114,6 +150,15 @@ public class Sketch1 extends PApplet {
     if ((intMenuSelect == 1) && (keyCode == ENTER)){
       background(255);
       State = STATE.GAME; 
+    } 
+    else if ((intMenuSelect == 2) && (keyCode == ENTER)){
+      State = STATE.SELECTION; 
+    }
+    else if ((intMenuSelect == 3) && (keyCode == ENTER)) {
+      State = STATE.QUIT;
+      if (State == STATE.QUIT) {
+        exit();
+      }
     }
   
   // Determines game state to be menu, selection, game or quit, changes screen depending on state, determines menu button select
@@ -143,141 +188,212 @@ public class Sketch1 extends PApplet {
 
   fill(0);
   textSize(50);
-  text("Character Selection", 180, 360);
+  text("Weapon Selection", 180, 360);
   
   fill(0);
   textSize(50);
   text("QUIT", 330, 475);
 
+  // Draws the first menu text button (Play)
   if (intMenuSelect == 1) {
+
   fill(255, 0, 0);
   textSize(50);
   text("PLAY", 330, 245);
-    } else {
-  if ( intMenuSelect == 2) { 
+
+  // Draws the second menu text button (Weapon Selection)
+  } 
+  else if ( intMenuSelect == 2) { 
+
   fill(255, 0, 0);
   textSize(50);
-  text("Character Selection", 180, 360);
-    } else {
-  if (intMenuSelect == 3) { 
+  text("Weapon Selection", 180, 360);
+
+  // Draws the third menu text button (Quit)
+  } 
+  else if (intMenuSelect == 3) {
+
   fill(255, 0, 0);
   textSize(50);
   text("QUIT", 330, 475);
+  }
+
+
+ }
+  // Determines if it is game state, uses methods to draw game
+  else if(State == STATE.GAME) {
+    playerDirection();
+    healthBar();
+  }
+  // Determines if it is selection state, draws selection objects
+  else if (State == STATE.SELECTION) {
+    image(imgSelectScreen, 0, 0, 800, 800); 
+    image(imgSwordS1, 200, intSwordY);
+    image(imgWandS2, 430, intWandY);
+
+    // If statement to determine weapon select and giving the weapon a numerical value
+    if (keyPressed) {
+      
+      if (keyCode == LEFT) {
+
+        intWeaponSelect -= 1;
+        delay(60);
+
+        if (intMenuSelect < 1) {
+          intMenuSelect = 1;
+        }
+      } else if (keyCode == RIGHT) {
+
+        intWeaponSelect += 1;
+        delay(60);
+        
+        if (intMenuSelect > 2) {
+          intMenuSelect = 2;
+        }
+      }
+      // If statement that will animate the weapon
+      if (intWeaponSelect == 1) {
+        image(imgSwordSelected, 200, intSwordY);
+      }
+      else if (intWeaponSelect == 2) {
+        image(imgWandSelected, 430, intWandY);
       }
     }
   }
-
-    } else {    
-  if(State == STATE.GAME) {
-    Player();
-    Player(width / 2, height / 2, 32);
-    playerDirection();
-  /*while(blnPlayerAlive != false) {
-  }*/
-  healthBar();
-    }
-  }
 }
-
-public void healthBar() {
-  // Creates Hp Bar
-  strokeWeight(2);
-  stroke(0);
-  noFill();
-  rect(50, 25, 250, 15);
-
-  fill(255, 0, 0);
-  rect(50, 25, fltHpBar, 15);  
-  }
   // define other methods down here. 
+  public void healthBar() {
+    // Creates Hp Bar
+    strokeWeight(2);
+    stroke(0);
+    noFill();
+    rect(50, 25, 300, 15);
+  
+    fill(255, 0, 0);
+    rect(50, 25, fltHpBar, 15);  
+    }
 
-  public void Player() { 
-    intPlayerPosX = width / 2;
-    intPlayerPosX = height / 2; 
-    intPlayerR = 32;
-  }
+  public void stageSelect() {
 
-  public void Player(int intPosX, int intPosY, int intRadius) {
-    this.intPlayerPosX = intPosX;
-    this.intPlayerPosX = intPosX;
-    intPlayerR = intRadius; 
-  }
+    int intStageNumber = 0;
 
+    boolean blnClearCondition;
+    // Sets the condition for player death
+    if (intPlayerHp == 0) {
+      blnPlayerAlive = false;
+    }
+    // Sets the clear condition of a stage to be based off the player alive status and stage changes
+    if(blnPlayerAlive == false) {
+
+      blnClearCondition = true; 
+      if ((blnClearCondition == true) && (intStageNumber == 0)) {
+        intStageNumber += 1;
+      }
+
+    }
+     if (intStageNumber == 0) {
+      // tutorial stuff
+     }
+     else if (intStageNumber == 2) {
+      // Boss level
+     }
+    }
+
+  // define other methods down here. 
   public void playerDirection() {
     // Determines if player is facing right, if it is facing right, animate player moving right images
     if (!blnMoving) {
       if (blnFaceDown) {
-        image(imgPlayerDown1, intPlayerPosX, intPlayerPosY);
+        image(imgPlayerDown1, intPlayerX, intPlayerY);
       } 
       else if (blnFaceLeft) {
-        image(imgPlayerLeft1, intPlayerPosX, intPlayerPosY);
+        image(imgPlayerLeft1, intPlayerX, intPlayerY);
       }
       else if (blnFaceRight) {
-        image(imgPlayerRight1, intPlayerPosX, intPlayerPosY);
+        image(imgPlayerRight1, intPlayerX, intPlayerY);
       }
       else if (blnFaceUp) {
-        image(imgPlayerUp1, intPlayerPosX, intPlayerPosY);
+        image(imgPlayerUp1, intPlayerX, intPlayerY);
       }
     }
-    
     else if (blnMoving && blnMovingUp) {
       if (intPlayerMoveTick > intStepLength) {
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
       }
-      
-      if (blnStep) {
-        image(imgPlayerUp1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      if (blnStep) 
+      {
+        image(imgPlayerUp1, intPlayerX, intPlayerY);
       }
-      else { 
-        image(imgPlayerUp2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      else 
+      { 
+        image(imgPlayerUp2, intPlayerX, intPlayerY);
       }
     }
+
     // Determines if player is facing left, if it is facing leftt, animate player moving left images
-    else if (blnMoving && blnMovingDown) {
-      if (intPlayerMoveTick > intStepLength) {
+    else if (blnMoving && blnMovingDown) 
+    {
+      if (intPlayerMoveTick > intStepLength)
+      {
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
       }
-
-      if (blnStep) {
-        image(imgPlayerDown1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
-      }
-      else {
-        image(imgPlayerDown2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
-      }
-    }
-    // Determines if player is facing down, if it is facing down, animate player moving down images
-    else if (blnMoving && blnMovingLeft) {
-      if (intPlayerMoveTick > intStepLength) {
-        blnStep = !blnStep;
-        intPlayerMoveTick = 0;
-      }
-
-      if (blnStep) {
-        image(imgPlayerDown1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      if (blnStep)
+      {
+        image(imgPlayerDown1, intPlayerX, intPlayerY);
       }
       else 
       {
-        image(imgPlayerDown2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+        image(imgPlayerDown2, intPlayerX, intPlayerY);
       }
     }
-    // Determines if player is facing up, if it is facing up, animate player moving down images
-    else if (blnMoving && blnMovingRight) {
-      if (intPlayerMoveTick > intStepLength) {
+    // Determines if player is facing down, if it is facing down, animate player moving down images
+    else if (blnMoving && blnMovingLeft) 
+    {
+      if (intPlayerMoveTick > intStepLength)
+      {
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
       }
 
-      if (blnStep) {
-        image(imgPlayerRight1, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      if (blnStep)
+      {
+        image(imgPlayerLeft1, intPlayerX, intPlayerY);
       }
-      else {
-        image(imgPlayerRight2, intPlayerPosX - intPlayerR, intPlayerPosY - intPlayerR);
+      else 
+      {
+        image(imgPlayerLeft2, intPlayerX, intPlayerY);
+      }
+    }
+    // Determines if player is facing up, if it is facing up, animate player moving down images
+    else if (blnMoving && blnMovingRight) 
+    {
+      if (intPlayerMoveTick > intStepLength)
+      {
+        blnStep = !blnStep;
+        intPlayerMoveTick = 0;
+      }
+
+      if (blnStep)
+      {
+        image(imgPlayerRight1, intPlayerX, intPlayerY);
+      }
+      else 
+      {
+        image(imgPlayerRight2, intPlayerX, intPlayerY);
       }
     }
   }
+
+  public void hollowPurple() {
+    /*if(keyPressed == "/") {
+
+    }/* */
+
+  } 
 }
+
 
 
 
