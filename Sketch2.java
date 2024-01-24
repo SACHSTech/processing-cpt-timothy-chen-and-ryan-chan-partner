@@ -13,7 +13,7 @@ public class Sketch2 extends PApplet {
   int intPlayerX;
   int intPlayerY;
   int intPlayerMoveTick = 0;
-  int intPlayerSpeed = 8;
+  int intPlayerSpeed = 4;
   int intDashCooldown = 0;
   int intDashDistance = 20;
   int intPlayerHitBox = 40;

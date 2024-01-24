@@ -37,7 +37,7 @@ public class Sketch extends PApplet {
   int intSizeIncrease = 64;
 
   // Speed
-  int intPlayerSpeed = 8;
+  int intPlayerSpeed = 4;
     
   // Variables to confirm player movement
   boolean blnFaceRight = false;
@@ -907,7 +907,7 @@ public class Sketch extends PApplet {
               intCannonballY = intTankY - 50;
               intCannonballFlyX = intTankX - 50;
               intCannonballFlyY = intTankY - 50;
-              intPlayerHp -= 300;
+              intPlayerHp -= 150;
               intCannonballCooldown = 0;
             }
             // if statement to reset the cannon ball X and Y variables, the temporary variables, cannonball launched boolean to false, cannonball cooldown to 0, if the cannonball reaches the temporary cannonball location.
