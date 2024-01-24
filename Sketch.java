@@ -7,9 +7,9 @@ public class Sketch extends PApplet {
   // Global Variables
   int intMenuSelect = 1; 
   int intPlayerHp = 300;
-  boolean blnPlayerAlive;
+  boolean blnPlayerAlive = true;
   boolean blnWeapon1Selected; 
-  int intStageNumber = 0;
+  int intStageNumber = 1;
   boolean blnClearCondition;
   
   // Temporary variables to hold the position of the mouse at time of mouse pressed
@@ -152,17 +152,13 @@ public class Sketch extends PApplet {
   int intTankY = 400;
   int intTankViewDistance = 800;
   int intTankAttackDistance = 500;
-  int intTankAttackDamage;
-  int intTankSpeed;
-  int intTankMoveTick;
-  int intTankMoving;
+  int intTankSpeed = 10;
   int intTankHitBox = 110;
   int intCannonballX = intTankX - 50;
   int intCannonballY = intTankY - 50;
   int intCannonballCooldown = 60;
   int intCannonballFlyX = intTankX - 50;
   int intCannonballFlyY = intTankY - 50;
-  int intCannonballMovement;
   int intCannonballMoveTick = 0;
   int intCannonballTakeStep = 5;
   int intCannonballSpeed = 10;
@@ -291,8 +287,8 @@ public class Sketch extends PApplet {
     imgOrcLeft2.resize(30, 30);
     imgTankFaceLeft1.resize(150, 150);
     imgTankFaceRight1.resize(150, 150);
-    imgCannonBall1.resize(60, 60);
-    imgCannonBall2.resize(60, 60);
+    imgCannonBall1.resize(80, 80);
+    imgCannonBall2.resize(80, 80);
     imgYouWinScreen.resize(200, 200);
     
     // Background
@@ -416,12 +412,13 @@ public class Sketch extends PApplet {
 
       // Determines the player status on the next stage after tutorial, sets conditions for losing and input to retry
       if ((blnPlayerAlive == false) && (intStageNumber == 2)) {
-        text("Game Over, try again", CENTER, CENTER);
-        text("Press 'e' to try again", 400, 400);
+        textSize(32);
+        text("Game Over, try again", 200, 300);
+        text("Press 'e' to try again", 400, 500);
           if (key == 'e') {
             intPlayerHp = 300;
             blnPlayerAlive = true;
-            fltTankHp = 1000;
+            fltTankHp = 600;
           }
         }
       }
@@ -545,16 +542,23 @@ public class Sketch extends PApplet {
   
     fill(255, 0, 0);
     rect(50, 50, intPlayerHp, 15);
-    noStroke();
-    fill(132, 164, 20);
-    rect(0, 50, 50, 20);  
+    
+    if (intStageNumber == 1) {
+        noStroke();
+        fill(132, 164, 20);
+        rect(0, 40, 50, 30);  
+    }
 
     // Using the boolean to determine which weapon was selected and bases the class icon drawn off that
     if (blnWeapon1Selected == true) {
-      image(imgSwordIcon, 360, 15);
+      if (blnPlayerAlive == true) {
+        image(imgSwordIcon, 370, 55);
+      }
     } 
     else if (blnWeapon1Selected != true) {
-      image(imgWandIcon, 360, 15);
+      if (blnPlayerAlive == true) { 
+        image(imgWandIcon, 370, 55);
+      }
     }
   }
 
@@ -564,16 +568,19 @@ public class Sketch extends PApplet {
   public void stageSelect() {
 
     // Sets the condition for player death
-    if (intPlayerHp <= 1) {
-      intPlayerHp = 0;
+    if (intPlayerHp <= 0) {
+      
       blnPlayerAlive = false;
     }
     // Sets the clear condition of a stage to be based off the player alive status and stage changes
     if(blnPlayerAlive == false) {
-
+      
       blnClearCondition = true; 
-      if ((blnClearCondition == true) && (intStageNumber == 0)) {
+      if ((blnClearCondition == true) && (intStageNumber == 1)) {
+        
         intStageNumber += 1;
+        intPlayerHp = 300;
+        blnPlayerAlive = true;
       }
 
     }
@@ -587,8 +594,17 @@ public class Sketch extends PApplet {
      else if (intStageNumber == 2) {
       // Image Backgounr
       image(imgBrickBackground, width/2, height/2, 800, 800);
-      //Tank method
-      Tank();
+      
+      
+      if (blnPlayerAlive == true) {
+        //Tank method
+        Tank();
+      }
+      else if (blnPlayerAlive == false) {
+        fill(0);
+        rect(0, 0, 800, 800);
+      }
+
      }
     }
 
@@ -862,7 +878,7 @@ public class Sketch extends PApplet {
         // if statment to determine of the tank is facing left.
         if (blnTankFaceLeft == true) {
           // if statement to set the cannonball launched boolean to true, temporary cannonball fly X and Y variables to the player location alongside resetting the cannonball X and Y coordinates before drawing the cannonball.
-          if (frameCount % 120 == 0) {
+          if (frameCount % 60 == 0) {
             blnCannonballLaunched = true;
             intCannonballFlyX = intPlayerX;
             intCannonballFlyY = intPlayerY;
@@ -891,7 +907,7 @@ public class Sketch extends PApplet {
               intCannonballY = intTankY - 50;
               intCannonballFlyX = intTankX - 50;
               intCannonballFlyY = intTankY - 50;
-              intPlayerHp -= 150;
+              intPlayerHp -= 300;
               intCannonballCooldown = 0;
             }
             // if statement to reset the cannon ball X and Y variables, the temporary variables, cannonball launched boolean to false, cannonball cooldown to 0, if the cannonball reaches the temporary cannonball location.
@@ -907,7 +923,7 @@ public class Sketch extends PApplet {
         }
         // else if statement to do the same thing the if statement with the tank facing left but with the tank facing right.
         else if (blnTankFaceRight == true) {
-          if (frameCount % 120 == 0) {
+          if (frameCount % 60 == 0) {
             blnCannonballLaunched = true;
             intCannonballFlyX = intPlayerX;
             intCannonballFlyY = intPlayerY;

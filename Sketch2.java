@@ -78,17 +78,13 @@ public class Sketch2 extends PApplet {
   int intTankY = 400;
   int intTankViewDistance = 800;
   int intTankAttackDistance = 500;
-  int intTankAttackDamage;
-  int intTankSpeed;
-  int intTankMoveTick;
-  int intTankMoving;
+  int intTankSpeed = 10;
   int intTankHitBox = 110;
   int intCannonballX = intTankX - 50;
   int intCannonballY = intTankY - 50;
   int intCannonballCooldown = 60;
   int intCannonballFlyX = intTankX - 50;
   int intCannonballFlyY = intTankY - 50;
-  int intCannonballMovement;
   int intCannonballMoveTick = 0;
   int intCannonballTakeStep = 5;
   int intCannonballSpeed = 10;
@@ -164,8 +160,8 @@ public class Sketch2 extends PApplet {
     imgOrcLeft2.resize(30, 30);
     imgTankFaceLeft1.resize(150, 150);
     imgTankFaceRight1.resize(150, 150);
-    imgCannonBall1.resize(60, 60);
-    imgCannonBall2.resize(60, 60);
+    imgCannonBall1.resize(80, 80);
+    imgCannonBall2.resize(80, 80);
     imgYouWinScreen.resize(200, 200);
     
     // Background
@@ -363,14 +359,14 @@ public class Sketch2 extends PApplet {
     if (dist(intPlayerX, intPlayerY, intTankX, intTankY) <= intTankViewDistance) {
       // if statement to determine if the playerX location is further than the tank ttack distance.
       if (dist(intPlayerX, intPlayerY, intTankX, intTankY) > intTankAttackDistance ) {
-        intTankX -= 10;
+        intTankX -= intTankSpeed;
       }
       // if statment to determine if the player is inside of the tanks attack distance.
       if (dist(intPlayerX, intPlayerY, intTankX, intTankY) <= intTankAttackDistance) {
         // if statment to determine of the tank is facing left.
         if (blnTankFaceLeft == true) {
           // if statement to set the cannonball launched boolean to true, temporary cannonball fly X and Y variables to the player location alongside resetting the cannonball X and Y coordinates before drawing the cannonball.
-          if (frameCount % 120 == 0) {
+          if (frameCount % 60 == 0) {
             blnCannonballLaunched = true;
             intCannonballFlyX = intPlayerX;
             intCannonballFlyY = intPlayerY;
@@ -415,7 +411,7 @@ public class Sketch2 extends PApplet {
         }
         // else if statement to do the same thing the if statement with the tank facing left but with the tank facing right.
         else if (blnTankFaceRight == true) {
-          if (frameCount % 120 == 0) {
+          if (frameCount % 60 == 0) {
             blnCannonballLaunched = true;
             intCannonballFlyX = intPlayerX;
             intCannonballFlyY = intPlayerY;
