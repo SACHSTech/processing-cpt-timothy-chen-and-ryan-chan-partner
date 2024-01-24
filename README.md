@@ -15,6 +15,9 @@ Dash: Spacebar
 
 Attack: Mousepress
 
+Confirm Menu Button : ENTER
+
+
 Limitations:
 
 (1) The player cannot move outside of the drawn screen.

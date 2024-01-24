@@ -19,8 +19,8 @@ public class Sketch extends PApplet {
   // Defining variables for weapon animation and selection
   int intWeaponSpeed = 35;
   int intWeaponSelect = 0;
-  int intSwordY = 350;
-  int intWandY = 390;
+  int intSwordY = 420;
+  int intWandY = 470;
 
   // Player Variables
   int intPlayerX = width / 2;
@@ -28,6 +28,7 @@ public class Sketch extends PApplet {
   int intPlayerHitBox = 40;
 
   // Global Variables for weapon beams
+  float fltWeaponAtk = 0.5f;
   float fltWeaponBeamX = intPlayerX;
   float fltWeaponBeamY = intPlayerY;
 
@@ -517,7 +518,9 @@ public class Sketch extends PApplet {
       else if (fltWeaponBeamY > intTempY) {
 
           fltWeaponBeamY -= intWeaponSpeed;
-
+      if (dist(fltWeaponBeamX, fltWeaponBeamY, intTankX, intTankY) <= 10) {
+        fltTankHp -= fltWeaponAtk;
+      }
       } 
     }
   }
@@ -547,6 +550,12 @@ public class Sketch extends PApplet {
         noStroke();
         fill(132, 164, 20);
         rect(0, 40, 50, 30);  
+    }
+
+    if (intStageNumber == 1) {
+      noStroke();
+      fill(132, 164, 20);
+      rect(0, 40, 50, 30);
     }
 
     // Using the boolean to determine which weapon was selected and bases the class icon drawn off that
@@ -713,9 +722,13 @@ public class Sketch extends PApplet {
    */
   public void hollowPurple() {
     int intHollowPurpleAtk = 221801;
+    
+    if (dist(intHollowPurpleX, intHollowPurpleY, intTankX, intTankY) <= 10) {
+      fltTankHp -= intHollowPurpleAtk;
+    }
 
     if (key == '0') {
-      image(imgHollowPurple, CENTER, height / 2, intHollowPurpleX, intHollowPurpleY);  
+      image(imgHollowPurple, 400, 400, intHollowPurpleX, intHollowPurpleY);  
       if (frameCount % 5 == 0) {
         intHollowPurpleX += intSizeIncrease;
         intHollowPurpleY += intSizeIncrease;
