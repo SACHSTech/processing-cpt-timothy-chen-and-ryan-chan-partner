@@ -423,26 +423,51 @@ public class Sketch1 extends PApplet {
   public void stageSelect() {
 
     // Sets the condition for player death
-    if (intPlayerHp == 0) {
+    if (intPlayerHp <= 0) {
+      
       blnPlayerAlive = false;
     }
     // Sets the clear condition of a stage to be based off the player alive status and stage changes
     if(blnPlayerAlive == false) {
-
+      
       blnClearCondition = true; 
-      if ((blnClearCondition == true) && (intStageNumber == 0)) {
+      if ((blnClearCondition == true) && (intStageNumber == 1)) {
+        
         intStageNumber += 1;
+        intPlayerHp = 300;
+        blnPlayerAlive = true;
       }
 
     }
     // Stage information 
-     if (intStageNumber == 0) {
-      // Tutorial Stage (Insert Ryan's Code)
+     /* if (intStageNumber == 1) {
+      // Image Background
+      image(imgGrassBackground, width/2, height/2, 800, 800);
+      Orc();
+      
      }
-     else if (intStageNumber == 1) {
-      // Boss level (Insert Ryan's Code)
-     }
-    }
+     else if (intStageNumber == 2) {
+      // Image Backgound
+      if (blnGameWon != true) {
+
+        image(imgBrickBackground, width/2, height/2, 800, 800);
+
+      } else if (blnGameWon = true) {
+
+        image(imgYouWinScreen, width/2, height/2, 800, 800);
+
+      }
+
+      if (blnPlayerAlive == true) {
+        // Tank method (Ryan's Code)
+        Tank(); 
+      } 
+      else if ((blnPlayerAlive == false) && (blnGameWon != true)) {
+        fill(0);
+        rect(0, 0, 800, 800);
+      }
+    } */
+  }
 
   /**
    * Determines player movement animation and direction sprite based off keyboard input
