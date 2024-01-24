@@ -128,7 +128,7 @@ public class Sketch extends PApplet {
   int intOrcAttackRange = 40;
   int intOrcSpeed = 4;
   int intOrcDamage = 5;
-  boolean [] blnOrcHideStatus = new boolean[30];
+  boolean[] blnOrcHideStatus = new boolean[30];
   boolean[] blnOrcMoving = new boolean[30];
   boolean[] blnOrcMoveRight = new boolean[30];
   boolean[] blnOrcMoveLeft = new boolean[30];
@@ -289,8 +289,8 @@ public class Sketch extends PApplet {
     imgOrcLeft2.resize(30, 30);
     imgTankFaceLeft1.resize(150, 150);
     imgTankFaceRight1.resize(150, 150);
-    imgCannonBall1.resize(80, 80);
-    imgCannonBall2.resize(80, 80);
+    imgCannonBall1.resize(100, 100);
+    imgCannonBall2.resize(100, 100);
     imgYouWinScreen.resize(200, 200);
     
     // Background
@@ -519,17 +519,17 @@ public class Sketch extends PApplet {
       // Weapon mouse tracking
       if (fltWeaponBeamX < intTempX) {
 
-          fltWeaponBeamX += intWeaponSpeed;
+        fltWeaponBeamX += intWeaponSpeed;
 
       } 
       else if (fltWeaponBeamX > intTempX) {
 
-          fltWeaponBeamX -= intWeaponSpeed;
+        fltWeaponBeamX -= intWeaponSpeed;
   
       }
       if (fltWeaponBeamY < intTempY) {
 
-          fltWeaponBeamY += intWeaponSpeed;
+        fltWeaponBeamY += intWeaponSpeed;
     
       }
       else if (fltWeaponBeamY > intTempY) {

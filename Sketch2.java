@@ -41,24 +41,24 @@ public class Sketch2 extends PApplet {
   PImage imgOrcRight2;
 
   // Orc Variables
-  int[] intOrcX = new int[300];
-  int[] intOrcY = new int[300];
-  int[] intOrcHp = new int[300];
-  int[] intOrcMoveTick = new int[300];
-  int[] intOrcTakeStep = new int[300];
+  int[] intOrcX = new int[30];
+  int[] intOrcY = new int[30];
+  int[] intOrcHp = new int[30];
+  int[] intOrcMoveTick = new int[30];
+  int[] intOrcTakeStep = new int[30];
   int intOrcDirectionX;
   int intOrcDirectionY;
   int intOrcViewDistance = 200;
   int intOrcAttackRange = 40;
   int intOrcSpeed = 4;
   int intOrcDamage;
-  boolean [] blnOrcHideStatus = new boolean[300];
-  boolean[] blnOrcMoving = new boolean[300];
-  boolean[] blnOrcMoveRight = new boolean[300];
-  boolean[] blnOrcMoveLeft = new boolean[300];
-  boolean[] blnOrcMoveUp = new boolean[300];
-  boolean[] blnOrcMoveDown = new boolean[300];
-  boolean[] blnOrcStep = new boolean[300];
+  boolean[] blnOrcHideStatus = new boolean[30];
+  boolean[] blnOrcMoving = new boolean[30];
+  boolean[] blnOrcMoveRight = new boolean[30];
+  boolean[] blnOrcMoveLeft = new boolean[30];
+  boolean[] blnOrcMoveUp = new boolean[30];
+  boolean[] blnOrcMoveDown = new boolean[30];
+  boolean[] blnOrcStep = new boolean[30];
   
   // Tank Image Variables
   PImage[] imgTankExplode;
@@ -87,7 +87,7 @@ public class Sketch2 extends PApplet {
   int intCannonballFlyY = intTankY - 50;
   int intCannonballMoveTick = 0;
   int intCannonballTakeStep = 5;
-  int intCannonballSpeed = 10;
+  int intCannonballSpeed = 15;
   boolean blnCannonballMoving;
   boolean blnTankHideStatus;
   boolean blnTankMoving;
@@ -366,7 +366,7 @@ public class Sketch2 extends PApplet {
         // if statment to determine of the tank is facing left.
         if (blnTankFaceLeft == true) {
           // if statement to set the cannonball launched boolean to true, temporary cannonball fly X and Y variables to the player location alongside resetting the cannonball X and Y coordinates before drawing the cannonball.
-          if (frameCount % 60 == 0) {
+          if (frameCount % 50 == 0) {
             blnCannonballLaunched = true;
             intCannonballFlyX = intPlayerX;
             intCannonballFlyY = intPlayerY;
@@ -399,7 +399,7 @@ public class Sketch2 extends PApplet {
               intCannonballCooldown = 0;
             }
             // if statement to reset the cannon ball X and Y variables, the temporary variables, cannonball launched boolean to false, cannonball cooldown to 0, if the cannonball reaches the temporary cannonball location.
-            if (dist(intCannonballX, intCannonballY, intCannonballFlyX, intCannonballFlyY) <= 10) {
+            if (dist(intCannonballX, intCannonballY, intCannonballFlyX, intCannonballFlyY) <= 15) {
               blnCannonballLaunched = false;
               intCannonballX = intTankX - 50;
               intCannonballY = intTankY - 50;
@@ -411,7 +411,7 @@ public class Sketch2 extends PApplet {
         }
         // else if statement to do the same thing the if statement with the tank facing left but with the tank facing right.
         else if (blnTankFaceRight == true) {
-          if (frameCount % 60 == 0) {
+          if (frameCount % 50 == 0) {
             blnCannonballLaunched = true;
             intCannonballFlyX = intPlayerX;
             intCannonballFlyY = intPlayerY;
@@ -441,7 +441,7 @@ public class Sketch2 extends PApplet {
               intPlayerHp -= 150;
               intCannonballCooldown = 0;
             }
-            if (dist(intCannonballX, intCannonballY, intCannonballFlyX, intCannonballFlyY) <= 10) {
+            if (dist(intCannonballX, intCannonballY, intCannonballFlyX, intCannonballFlyY) <= 15) {
               blnCannonballLaunched = false;
               intCannonballX = intTankX + 50;
               intCannonballY = intTankY - 50;
