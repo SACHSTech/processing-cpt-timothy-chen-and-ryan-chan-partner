@@ -322,12 +322,11 @@ public class Sketch extends PApplet {
         image(imgBrickBackground, width/2, -800, 800, 800);
         
         // Temporary Player Rectangle
-        rect(intPlayerX, intPlayerY, 40, 40);
         playerMovement();
         playerDirection();
 
         Orc();
-        Tank();
+        // Tank();
         playerDash();
         healthBar();
           
