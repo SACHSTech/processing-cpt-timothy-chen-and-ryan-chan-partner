@@ -28,7 +28,7 @@ public class Sketch extends PApplet {
   int intPlayerHitBox = 40;
 
   // Global Variables for weapon beams
-  float fltWeaponAtk = 0.5f;
+  float fltWeaponAtk = 1;
   float fltWeaponBeamX = intPlayerX;
   float fltWeaponBeamY = intPlayerY;
 
@@ -127,7 +127,7 @@ public class Sketch extends PApplet {
   int intOrcAttackRange = 40;
   int intOrcSpeed = 4;
   int intOrcDamage = 5;
-  boolean [] blnOrcHideStatus = new boolean[30];
+  boolean[] blnOrcHideStatus = new boolean[30];
   boolean[] blnOrcMoving = new boolean[30];
   boolean[] blnOrcMoveRight = new boolean[30];
   boolean[] blnOrcMoveLeft = new boolean[30];
@@ -162,7 +162,7 @@ public class Sketch extends PApplet {
   int intCannonballFlyY = intTankY - 50;
   int intCannonballMoveTick = 0;
   int intCannonballTakeStep = 5;
-  int intCannonballSpeed = 10;
+  int intCannonballSpeed = 15;
   boolean blnCannonballMoving;
   boolean blnTankHideStatus;
   boolean blnTankMoving;
@@ -288,8 +288,8 @@ public class Sketch extends PApplet {
     imgOrcLeft2.resize(30, 30);
     imgTankFaceLeft1.resize(150, 150);
     imgTankFaceRight1.resize(150, 150);
-    imgCannonBall1.resize(80, 80);
-    imgCannonBall2.resize(80, 80);
+    imgCannonBall1.resize(100, 100);
+    imgCannonBall2.resize(100, 100);
     imgYouWinScreen.resize(200, 200);
     
     // Background
@@ -502,25 +502,25 @@ public class Sketch extends PApplet {
 
       if (fltWeaponBeamX < intTempX) {
 
-          fltWeaponBeamX += intWeaponSpeed;
+        fltWeaponBeamX += intWeaponSpeed;
 
       } 
       else if (fltWeaponBeamX > intTempX) {
 
-          fltWeaponBeamX -= intWeaponSpeed;
+        fltWeaponBeamX -= intWeaponSpeed;
   
       }
       if (fltWeaponBeamY < intTempY) {
 
-          fltWeaponBeamY += intWeaponSpeed;
+        fltWeaponBeamY += intWeaponSpeed;
     
       }
       else if (fltWeaponBeamY > intTempY) {
 
-          fltWeaponBeamY -= intWeaponSpeed;
-      if (dist(fltWeaponBeamX, fltWeaponBeamY, intTankX, intTankY) <= 10) {
-        fltTankHp -= fltWeaponAtk;
-      }
+        fltWeaponBeamY -= intWeaponSpeed;
+        if (dist(fltWeaponBeamX, fltWeaponBeamY, intTankX, intTankY) <= 40) {
+          fltTankHp -= fltWeaponAtk;
+        }
       } 
     }
   }
@@ -891,7 +891,7 @@ public class Sketch extends PApplet {
         // if statment to determine of the tank is facing left.
         if (blnTankFaceLeft == true) {
           // if statement to set the cannonball launched boolean to true, temporary cannonball fly X and Y variables to the player location alongside resetting the cannonball X and Y coordinates before drawing the cannonball.
-          if (frameCount % 60 == 0) {
+          if (frameCount % 50 == 0) {
             blnCannonballLaunched = true;
             intCannonballFlyX = intPlayerX;
             intCannonballFlyY = intPlayerY;
@@ -924,7 +924,7 @@ public class Sketch extends PApplet {
               intCannonballCooldown = 0;
             }
             // if statement to reset the cannon ball X and Y variables, the temporary variables, cannonball launched boolean to false, cannonball cooldown to 0, if the cannonball reaches the temporary cannonball location.
-            if (dist(intCannonballX, intCannonballY, intCannonballFlyX, intCannonballFlyY) <= 10) {
+            if (dist(intCannonballX, intCannonballY, intCannonballFlyX, intCannonballFlyY) <= 15) {
               blnCannonballLaunched = false;
               intCannonballX = intTankX - 50;
               intCannonballY = intTankY - 50;
@@ -936,7 +936,7 @@ public class Sketch extends PApplet {
         }
         // else if statement to do the same thing the if statement with the tank facing left but with the tank facing right.
         else if (blnTankFaceRight == true) {
-          if (frameCount % 60 == 0) {
+          if (frameCount % 50 == 0) {
             blnCannonballLaunched = true;
             intCannonballFlyX = intPlayerX;
             intCannonballFlyY = intPlayerY;
@@ -966,7 +966,7 @@ public class Sketch extends PApplet {
               intPlayerHp -= 150;
               intCannonballCooldown = 0;
             }
-            if (dist(intCannonballX, intCannonballY, intCannonballFlyX, intCannonballFlyY) <= 10) {
+            if (dist(intCannonballX, intCannonballY, intCannonballFlyX, intCannonballFlyY) <= 15) {
               blnCannonballLaunched = false;
               intCannonballX = intTankX + 50;
               intCannonballY = intTankY - 50;
