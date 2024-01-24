@@ -11,6 +11,7 @@ public class Sketch extends PApplet {
   boolean blnWeapon1Selected; 
   int intStageNumber = 1;
   boolean blnClearCondition;
+  boolean blnGameWon = false;
   
   // Temporary variables to hold the position of the mouse at time of mouse pressed
   int intTempX = mouseX;
@@ -356,25 +357,29 @@ public class Sketch extends PApplet {
           }
         }
       }
-      // Draws the base text in the menu state for the different selection options
-      fill(0);
-      textSize(50);
-      text("PLAY", 330, 245);
+      // Draws the base text in the menu state for the different selection options and game title
+      fill(0) ;
+      textSize(80);
+      text("Boss Bachi", 200, 200);
 
       fill(0);
       textSize(50);
-      text("Weapon Selection", 180, 360);
+      text("PLAY", 330, 345);
+
+      fill(0);
+      textSize(50);
+      text("Weapon Selection", 180, 460);
       
       fill(0);
       textSize(50);
-      text("QUIT", 330, 475);
+      text("QUIT", 330, 575);
 
       // Draws the first menu text button if selected (Play)
       if (intMenuSelect == 1) {
 
       fill(255, 0, 0);
       textSize(50);
-      text("PLAY", 330, 245);
+      text("PLAY", 330, 345);
 
       // Draws the second menu text button if selected (Weapon Selection)
       } 
@@ -382,7 +387,7 @@ public class Sketch extends PApplet {
 
       fill(255, 0, 0);
       textSize(50);
-      text("Weapon Selection", 180, 360);
+      text("Weapon Selection", 180, 460);
 
       // Draws the third menu text button if selected (Quit)
       } 
@@ -390,7 +395,7 @@ public class Sketch extends PApplet {
 
       fill(255, 0, 0);
       textSize(50);
-      text("QUIT", 330, 475);
+      text("QUIT", 330, 575);
       }
 
 
@@ -401,8 +406,8 @@ public class Sketch extends PApplet {
       stageSelect();
       projectileMovement();
       healthBar();
-      playerDirection();
       hollowPurple();
+      playerDirection();
       
       // Player dash method
       playerDash();
@@ -412,11 +417,13 @@ public class Sketch extends PApplet {
       edgeDetection();
 
       // Determines the player status on the next stage after tutorial, sets conditions for losing and input to retry
-      if ((blnPlayerAlive == false) && (intStageNumber == 2)) {
+      if ((blnPlayerAlive == false) && (intStageNumber == 2) && (blnGameWon != true)) {
         textSize(32);
         text("Game Over, try again", 200, 300);
         text("Press 'e' to try again", 400, 500);
           if (key == 'e') {
+            intStageNumber = 2;
+            blnGameWon = false;
             intPlayerHp = 300;
             blnPlayerAlive = true;
             fltTankHp = 600;
@@ -498,8 +505,14 @@ public class Sketch extends PApplet {
    */
   public void projectileMovement() {
     if(mousePressed) {
+      // Determines weapon beam according to weapon selected
+      if(intWeaponSelect == 1) {
       image(imgSwordBeam, fltWeaponBeamX, fltWeaponBeamY);
-
+    } 
+      else if(intWeaponSelect == 2) {
+      image(imgWandBeam, fltWeaponBeamX, fltWeaponBeamY);
+    }
+      // Weapon mouse tracking
       if (fltWeaponBeamX < intTempX) {
 
         fltWeaponBeamX += intWeaponSpeed;
@@ -517,13 +530,15 @@ public class Sketch extends PApplet {
       }
       else if (fltWeaponBeamY > intTempY) {
 
-        fltWeaponBeamY -= intWeaponSpeed;
-        if (dist(fltWeaponBeamX, fltWeaponBeamY, intTankX, intTankY) <= 40) {
-          fltTankHp -= fltWeaponAtk;
-        }
-      } 
+          fltWeaponBeamY -= intWeaponSpeed;
+
+      // Determines distance between weapon beam and tank, if it is less than or equal to 40, the weapon beam will damage the tank
+      if (dist(fltWeaponBeamX, fltWeaponBeamY, intTankX, intTankY) <= 40) {
+        fltTankHp -= fltWeaponAtk;
+      }
     }
   }
+}
   /**
    * Detects mouseinput, sets temporary variable values to mouseX and mouseY so that the projectile does not constantly track the mouse
    */
@@ -601,15 +616,22 @@ public class Sketch extends PApplet {
       
      }
      else if (intStageNumber == 2) {
-      // Image Backgounr
-      image(imgBrickBackground, width/2, height/2, 800, 800);
-      
-      
+      // Image Backgound
+      if (blnGameWon != true) {
+
+        image(imgBrickBackground, width/2, height/2, 800, 800);
+
+      } else if (blnGameWon = true) {
+
+        image(imgYouWinScreen, width/2, height/2, 800, 800);
+
+      }
+
       if (blnPlayerAlive == true) {
-        //Tank method
+        // Tank method
         Tank();
       }
-      else if (blnPlayerAlive == false) {
+      else if ((blnPlayerAlive == false) && (blnGameWon != true)) {
         fill(0);
         rect(0, 0, 800, 800);
       }
@@ -722,19 +744,31 @@ public class Sketch extends PApplet {
    */
   public void hollowPurple() {
     int intHollowPurpleAtk = 221801;
-    
-    if (dist(intHollowPurpleX, intHollowPurpleY, intTankX, intTankY) <= 10) {
+    boolean blnHollowPurpleActive = false;
+
+    if (dist(intHollowPurpleX, intHollowPurpleY, intTankX, intTankY) <= 250) {
       fltTankHp -= intHollowPurpleAtk;
     }
 
     if (key == '0') {
-      image(imgHollowPurple, 400, 400, intHollowPurpleX, intHollowPurpleY);  
-      if (frameCount % 5 == 0) {
-        intHollowPurpleX += intSizeIncrease;
-        intHollowPurpleY += intSizeIncrease;
+      blnHollowPurpleActive = true;
+  }
+  if (blnHollowPurpleActive == true) {
+
+    image(imgHollowPurple, 400, 400, intHollowPurpleX, intHollowPurpleY);  
+    if (frameCount % 5 == 0) {
+
+      intHollowPurpleX += intSizeIncrease;
+      intHollowPurpleY += intSizeIncrease;
+
+      if(intHollowPurpleX > 1536) {
+        blnHollowPurpleActive = false;
+        intHollowPurpleX = 256;
+        intHollowPurpleY = 256;
       }
     }
   }
+}
 
   /**
    * Orc method that stores all of the Orc code.
@@ -870,9 +904,16 @@ public class Sketch extends PApplet {
       noFill();
       rect(100, 670, 600, 50);
     }
-    else {
-      // Draws the you win screen when the tank dies.
-      image(imgYouWinScreen, width/2, height/2, 800, 800);
+    else if (blnTankHideStatus == true) {
+      // Draws the you win screen when the tank dies based on blnGameWon which is set to true when tank is dead.
+      if(fltTankHp <= 0) {
+        blnGameWon = true;
+      }
+      if (blnGameWon == true) {
+        image(imgYouWinScreen, width/2, height/2, 800, 800);
+        intPlayerHp = 0;
+        blnPlayerAlive = false;
+      }
     }
   }
 

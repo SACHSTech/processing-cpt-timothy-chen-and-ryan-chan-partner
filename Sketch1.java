@@ -32,6 +32,7 @@ public class Sketch1 extends PApplet {
   int intPlayerHitBox = 40;
 
   // Global Variables for weapon beams
+  float fltWeaponAtk = 1;
   float fltWeaponBeamX = intPlayerX;
   float fltWeaponBeamY = intPlayerY;
 
@@ -41,7 +42,7 @@ public class Sketch1 extends PApplet {
   int intSizeIncrease = 64;
 
   // Speed
-  int intPlayerSpeed = 8;
+  int intPlayerSpeed = 4;
     
   // Variables to confirm player movement
   boolean blnFaceRight = false;
@@ -210,7 +211,11 @@ public class Sketch1 extends PApplet {
       }
     }
   }
-  // Draws the base text in the menu state for the different selection options
+  // Draws the base text in the menu state for the different selection options and game title
+  fill(0) ;
+  textSize(80);
+  text("Boss Bachi", 200, 200);
+  
   fill(0);
   textSize(50);
   text("PLAY", 330, 245);
@@ -256,10 +261,12 @@ public class Sketch1 extends PApplet {
     hollowPurple();
     projectileMovement();
     stageSelect();
+    
     // Determines the player status on the next stage after tutorial, sets conditions for losing and input to retry
-    if ((blnPlayerAlive == false) && (intStageNumber == 1)) {
-      text("Game Over, try again", CENTER, CENTER);
-      text("Press 'e' to try again", 400, 400);
+    if ((blnPlayerAlive == false) && (intStageNumber == 2)) {
+      textSize(32);
+      text("Game Over, try again", 200, 300);
+      text("Press 'e' to try again", 400, 500);
         if (key == 'e') {
           intPlayerHp = 300;
           blnPlayerAlive = true;
@@ -341,8 +348,13 @@ public class Sketch1 extends PApplet {
    */
   public void projectileMovement() {
     if(mousePressed) {
+      // Determines weapon beam according to weapon selected
+      if(intWeaponSelect == 1) {
       image(imgSwordBeam, fltWeaponBeamX, fltWeaponBeamY);
-
+    } 
+      else if(intWeaponSelect == 2) {
+      image(imgWandBeam, fltWeaponBeamX, fltWeaponBeamY);
+    }
       if (fltWeaponBeamX < intTempX) {
 
           fltWeaponBeamX += intWeaponSpeed;
@@ -528,15 +540,19 @@ public class Sketch1 extends PApplet {
    */
   public void hollowPurple() {
     int intHollowPurpleAtk = 221801;
- 
+     
+    /* if (dist(intHollowPurpleX, intHollowPurpleY, intTankX, intTankY) <= 10) {
+      fltTankHp -= intHollowPurpleAtk;
+    }
+    */
     if (key == '0') {
-        image(imgHollowPurple, CENTER, height / 2, intHollowPurpleX, intHollowPurpleY);  
-        if (frameCount % 5 == 0) {
-          intHollowPurpleX += intSizeIncrease;
-          intHollowPurpleY += intSizeIncrease;
-        }
+      image(imgHollowPurple, 400, 400, intHollowPurpleX, intHollowPurpleY);  
+      if (frameCount % 5 == 0) {
+        intHollowPurpleX += intSizeIncrease;
+        intHollowPurpleY += intSizeIncrease;
       }
     }
   }
+}
 
 
