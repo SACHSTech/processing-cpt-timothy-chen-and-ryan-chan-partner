@@ -191,152 +191,154 @@ public class Sketch1 extends PApplet {
       }
     }
   
-  // Determines game state to be menu, selection, game or quit, changes screen depending on state, determines menu button select
-  if(State == STATE.MENU) {
-  background(0);
-  image(imgTitleScreen, 0, 0);
+    // Determines game state to be menu, selection, game or quit, changes screen depending on state, determines menu button select
+    if(State == STATE.MENU) {
+      background(0);
+      image(imgTitleScreen, 0, 0);
 
-  if (keyPressed) {
-    if (keyCode == UP) {
-      intMenuSelect -= 1;
-      delay(100);
-      if (intMenuSelect < 1) {
-        intMenuSelect = 3;
-      }
-    } else if (keyCode == DOWN) {
-      intMenuSelect += 1;
-      delay(100);
-      if (intMenuSelect > 3) {
-        intMenuSelect = 1;
-      }
-    }
-  }
-  // Draws the base text in the menu state for the different selection options
-  fill(0);
-  textSize(50);
-  text("PLAY", 330, 245);
-
-  fill(0);
-  textSize(50);
-  text("Weapon Selection", 180, 360);
-  
-  fill(0);
-  textSize(50);
-  text("QUIT", 330, 475);
-
-  // Draws the first menu text button if selected (Play)
-  if (intMenuSelect == 1) {
-
-  fill(255, 0, 0);
-  textSize(50);
-  text("PLAY", 330, 245);
-
-  // Draws the second menu text button if selected (Weapon Selection)
-  } 
-  else if ( intMenuSelect == 2) { 
-
-  fill(255, 0, 0);
-  textSize(50);
-  text("Weapon Selection", 180, 360);
-
-  // Draws the third menu text button if selected (Quit)
-  } 
-  else if (intMenuSelect == 3) {
-
-  fill(255, 0, 0);
-  textSize(50);
-  text("QUIT", 330, 475);
-  }
-
-
- }
-  // Determines if it is game state, uses methods to draw game
-  else if(State == STATE.GAME) {
-    playerDirection();
-    healthBar();
-    hollowPurple();
-    projectileMovement();
-    stageSelect();
-    // Determines the player status on the next stage after tutorial, sets conditions for losing and input to retry
-    if ((blnPlayerAlive == false) && (intStageNumber == 1)) {
-      text("Game Over, try again", CENTER, CENTER);
-      text("Press 'e' to try again", 400, 400);
-        if (key == 'e') {
-          intPlayerHp = 300;
-          blnPlayerAlive = true;
-          // fltTankHp = 600;
+      if (keyPressed) {
+        if (keyCode == UP) {
+          intMenuSelect -= 1;
+          delay(100);
+          if (intMenuSelect < 1) {
+            intMenuSelect = 3;
+          }
+        } 
+        else if (keyCode == DOWN) {
+          intMenuSelect += 1;
+          delay(100);
+          if (intMenuSelect > 3) {
+            intMenuSelect = 1;
+          }
         }
       }
-    }
+      // Draws the base text in the menu state for the different selection options
+      fill(0);
+      textSize(50);
+      text("PLAY", 330, 245);
 
-  // Determines if it is selection state, draws selection objects
-  else if (State == STATE.SELECTION) {
-    background(imgSelectScreen);
-    image(imgSwordS1, 200, intSwordY);
-    image(imgWandS2, 430, intWandY);
+      fill(0);
+      textSize(50);
+      text("Weapon Selection", 180, 360);
+      
+      fill(0);
+      textSize(50);
+      text("QUIT", 330, 475);
 
-    // If statement to determine weapon select and giving the weapon a numerical value
-    if (keyPressed) {
-      if (keyCode == LEFT) {
-        delay(50);
-        intWeaponSelect -= 1;
+      // Draws the first menu text button if selected (Play)
+      if (intMenuSelect == 1) {
 
-        if (intWeaponSelect < 1) {
-          intWeaponSelect = 1;
-        }
+      fill(255, 0, 0);
+      textSize(50);
+      text("PLAY", 330, 245);
+
+      // Draws the second menu text button if selected (Weapon Selection)
       } 
-      if (keyCode == LEFT)  {
-        delay(50);
-        intWeaponSelect -= 1;
+      else if ( intMenuSelect == 2) { 
 
-        if (intWeaponSelect < 1) {
-          intWeaponSelect = 1;
+      fill(255, 0, 0);
+      textSize(50);
+      text("Weapon Selection", 180, 360);
+
+      // Draws the third menu text button if selected (Quit)
+      } 
+      else if (intMenuSelect == 3) {
+
+      fill(255, 0, 0);
+      textSize(50);
+      text("QUIT", 330, 475);
+      }
+
+
+    }
+    
+    // Determines if it is game state, uses methods to draw game
+    else if(State == STATE.GAME) {
+      playerDirection();
+      healthBar();
+      hollowPurple();
+      projectileMovement();
+      stageSelect();
+      // Determines the player status on the next stage after tutorial, sets conditions for losing and input to retry
+      if ((blnPlayerAlive == false) && (intStageNumber == 1)) {
+        text("Game Over, try again", CENTER, CENTER);
+        text("Press 'e' to try again", 400, 400);
+          if (key == 'e') {
+            intPlayerHp = 300;
+            blnPlayerAlive = true;
+            // fltTankHp = 600;
+          }
         }
       }
-      if (keyCode == RIGHT)  {
-        delay(50);
+
+    // Determines if it is selection state, draws selection objects
+    else if (State == STATE.SELECTION) {
+      background(imgSelectScreen);
+      image(imgSwordS1, 200, intSwordY);
+      image(imgWandS2, 430, intWandY);
+
+      // If statement to determine weapon select and giving the weapon a numerical value
+      if (keyPressed) {
+        if (keyCode == LEFT) {
+          delay(50);
+          intWeaponSelect -= 1;
+
+          if (intWeaponSelect < 1) {
+            intWeaponSelect = 1;
+          }
+        } 
+        if (keyCode == LEFT)  {
+          delay(50);
+          intWeaponSelect -= 1;
+
+          if (intWeaponSelect < 1) {
+            intWeaponSelect = 1;
+          }
+        }
+        if (keyCode == RIGHT)  {
+          delay(50);
+          intWeaponSelect += 1;
+
+          if (intWeaponSelect > 2) {
+            intWeaponSelect = 2;
+          }
+        } 
+        if (keyCode == RIGHT)  {
+          delay(50);
         intWeaponSelect += 1;
 
-        if (intWeaponSelect > 2) {
-          intWeaponSelect = 2;
-        }
-      } 
-      if (keyCode == RIGHT)  {
-        delay(50);
-       intWeaponSelect += 1;
-
-        if (intWeaponSelect > 2) {
-          intWeaponSelect = 2;
+          if (intWeaponSelect > 2) {
+            intWeaponSelect = 2;
+          }
         }
       }
-    }
-    // With the weapon select value chosen in the select screen, draws weapon selected image
-    if (intWeaponSelect == 1) {
+      // With the weapon select value chosen in the select screen, draws weapon selected image
+      if (intWeaponSelect == 1) {
 
-      image(imgSwordSelected, 200, intSwordY);
+        image(imgSwordSelected, 200, intSwordY);
 
-    }
-    else if (intWeaponSelect == 2) {
+      }
+      else if (intWeaponSelect == 2) {
 
-      image(imgWandSelected, 430, intWandY);
+        image(imgWandSelected, 430, intWandY);
 
-    }
+      }
 
-    // Selects the class for your character
-    if ((intWeaponSelect == 1) && (keyCode == ENTER)) {
-      blnWeapon1Selected = true;
-    } 
-    else if ((intWeaponSelect == 2) && (keyCode == ENTER)) {
-      blnWeapon1Selected = !true;
-    }
-    // Exits back into menu state
-    if (key == 'q') {
-      State = STATE.MENU;
+      // Selects the class for your character
+      if ((intWeaponSelect == 1) && (keyCode == ENTER)) {
+        blnWeapon1Selected = true;
+      } 
+      else if ((intWeaponSelect == 2) && (keyCode == ENTER)) {
+        blnWeapon1Selected = !true;
+      }
+      // Exits back into menu state
+      if (key == 'q') {
+        State = STATE.MENU;
+      }
     }
   }
-}
 
-  // define other methods down here. 
+  
   /**
    * Moves the projectile when the mouse is pressed and to where the mouse is pressed
    */
@@ -529,15 +531,15 @@ public class Sketch1 extends PApplet {
    */
   public void hollowPurple() {
     int intHollowPurpleAtk = 221801;
- 
+
     if (key == '0') {
-        image(imgHollowPurple, CENTER, height / 2, intHollowPurpleX, intHollowPurpleY);  
-        if (frameCount % 5 == 0) {
-          intHollowPurpleX += intSizeIncrease;
-          intHollowPurpleY += intSizeIncrease;
-        }
+      image(imgHollowPurple, CENTER, height / 2, intHollowPurpleX, intHollowPurpleY);  
+      if (frameCount % 5 == 0) {
+        intHollowPurpleX += intSizeIncrease;
+        intHollowPurpleY += intSizeIncrease;
       }
     }
   }
+}
 
 

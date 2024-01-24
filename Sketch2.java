@@ -136,6 +136,7 @@ public class Sketch2 extends PApplet {
     imgTankhitRight = loadImage("Tank Hit Right.png");
     imgYouWinScreen = loadImage("You Win.jpg");
     imgTankExplode = new PImage[3];
+
     // for loop to set an array for the three tank explode images.
     for (int TankExplodeCount = 0; TankExplodeCount < 3; TankExplodeCount++) {
       imgTankExplode[TankExplodeCount] = loadImage("Tank Explode_" + TankExplodeCount + ".png");
@@ -211,6 +212,8 @@ public class Sketch2 extends PApplet {
     playerMovement();
     // Player edge detection method
     edgeDetection();
+
+    
     }
 
   /**
