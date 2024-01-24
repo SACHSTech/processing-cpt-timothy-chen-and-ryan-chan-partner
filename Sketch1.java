@@ -1,5 +1,6 @@
 import processing.core.PApplet;
 import processing.core.PImage;
+import java.util.ArrayList;
 
 /**
  * A program thats creates a little game made by Timothy Chen and Ryan Chan of Mr. Fabroa's 2023/2024 ICS3U1 class
@@ -11,19 +12,26 @@ public class Sketch1 extends PApplet {
   // Global Variables
   int intMenuSelect; 
   int intPlayerHp = 10;
-  float fltHpBar = 300;
+  int intHpBar = 300;
   boolean blnPlayerAlive;
+  boolean blnWeapon1Selected; 
+  // Global Variables for weapon beams
+  int intCountBeams;
+  int intWeaponBeamX = 0;
+  int intWeaponBeamY = 0;
+  
+  // Temporary variables to hold the position of the mouse at time of mouse pressed
+  int intTempX = mouseX;
+  int intTempY = mouseY;
+
   // Defining variables for weapon animation and selection
-  int intWeaponSelect;
-  int intWeaponYSpeed = 1;
+  int intWeaponSelect = 0;
   int intSwordY = 350;
   int intWandY = 390;
-  int intHpBar = 300;
 
   // Player Variables
   int intPlayerX;
   int intPlayerY; 
-  int intPlayerR; 
   int intPlayerHitBox = 40;
 
   // Speed
@@ -42,8 +50,10 @@ public class Sketch1 extends PApplet {
 
   // Counts the ticks of the character moving to sync the animation
   int intPlayerMoveTick = 0;
+
   //  Number of ticks till the new step animation is animated
   int intStepLength = 5;
+
   // False is walk image 1, true is walk image 2
   boolean blnStep = false;
 
@@ -77,9 +87,12 @@ public class Sketch1 extends PApplet {
   PImage imgWandS2;
   PImage imgSwordSelected;
   PImage imgWandSelected;
+
   // Other Images
   PImage imgSwordBeam;
   PImage imgHollowPurple;
+  PImage imgSwordIcon;
+  PImage imgWandIcon;
 
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -97,6 +110,8 @@ public class Sketch1 extends PApplet {
     imgWandS2 = loadImage("wands2.png");
     imgSwordSelected = loadImage("swordSelected.png");
     imgWandSelected = loadImage("wandSelected.png");
+    imgSwordIcon = loadImage("classSelected1.png");
+    imgWandIcon = loadImage("classSelected2.png");
 
 
     // Loading Player Images
@@ -123,6 +138,7 @@ public class Sketch1 extends PApplet {
     // Sets background colour
     background(0, 0, 0);
     frameRate(60);
+
     // Resizes the loaded images
     imgSelectScreen.resize(800, 800);
     imgTitleScreen.resize(800, 800);
@@ -140,13 +156,15 @@ public class Sketch1 extends PApplet {
     imgPlayerDown2.resize(32, 32);
     imgSwordBeam.resize(16, 16);
     imgHollowPurple.resize(64, 64);
+    imgSwordIcon.resize(32, 32);
+    imgWandIcon.resize(32, 32);
   }
 
   /**
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
-    //  Selects the state of the game
+    // Selects the state of the game
     if ((intMenuSelect == 1) && (keyCode == ENTER)){
       background(255);
       State = STATE.GAME; 
@@ -181,7 +199,7 @@ public class Sketch1 extends PApplet {
       }
     }
   }
-  
+  // Draws the base text in the menu state for the different selection options
   fill(0);
   textSize(50);
   text("PLAY", 330, 245);
@@ -194,14 +212,14 @@ public class Sketch1 extends PApplet {
   textSize(50);
   text("QUIT", 330, 475);
 
-  // Draws the first menu text button (Play)
+  // Draws the first menu text button if selected (Play)
   if (intMenuSelect == 1) {
 
   fill(255, 0, 0);
   textSize(50);
   text("PLAY", 330, 245);
 
-  // Draws the second menu text button (Weapon Selection)
+  // Draws the second menu text button if selected (Weapon Selection)
   } 
   else if ( intMenuSelect == 2) { 
 
@@ -209,7 +227,7 @@ public class Sketch1 extends PApplet {
   textSize(50);
   text("Weapon Selection", 180, 360);
 
-  // Draws the third menu text button (Quit)
+  // Draws the third menu text button if selected (Quit)
   } 
   else if (intMenuSelect == 3) {
 
@@ -225,43 +243,97 @@ public class Sketch1 extends PApplet {
     playerDirection();
     healthBar();
   }
+
   // Determines if it is selection state, draws selection objects
   else if (State == STATE.SELECTION) {
-    image(imgSelectScreen, 0, 0, 800, 800); 
+    background(imgSelectScreen);
     image(imgSwordS1, 200, intSwordY);
     image(imgWandS2, 430, intWandY);
+    boolean blnSwordSelected = false;
 
     // If statement to determine weapon select and giving the weapon a numerical value
-    if (keyPressed) {
-      
-      if (keyCode == LEFT) {
+    if (keyCode == LEFT) {
 
-        intWeaponSelect -= 1;
-        delay(60);
+      intWeaponSelect--;
 
-        if (intMenuSelect < 1) {
-          intMenuSelect = 1;
-        }
-      } else if (keyCode == RIGHT) {
+      if (intWeaponSelect < 1) {
+        intWeaponSelect = 2;
+      }
 
-        intWeaponSelect += 1;
-        delay(60);
-        
-        if (intMenuSelect > 2) {
-          intMenuSelect = 2;
-        }
+      if (intWeaponSelect != 1) {
+      blnSwordSelected = false;
       }
-      // If statement that will animate the weapon
-      if (intWeaponSelect == 1) {
-        image(imgSwordSelected, 200, intSwordY);
+
+    } 
+    if (keyCode == LEFT)  {
+
+      intWeaponSelect--;
+
+      if (intWeaponSelect < 1) {
+        intWeaponSelect = 2;
       }
-      else if (intWeaponSelect == 2) {
-        image(imgWandSelected, 430, intWandY);
+
+      if (intWeaponSelect != 1) {
+      blnSwordSelected = true;
+
       }
+    }
+    if (keyCode == RIGHT)  {
+
+      intWeaponSelect++;
+
+      if (intWeaponSelect > 2) {
+        intWeaponSelect = 1;
+      }
+
+      if (intWeaponSelect != 1) {
+      blnSwordSelected = false;
+
+      }
+    } 
+    if (keyCode == RIGHT)  {
+
+      intWeaponSelect++;
+
+      if (intWeaponSelect > 2) {
+        intWeaponSelect = 1;
+      }
+
+      if (intWeaponSelect != 2) {
+      blnSwordSelected = true;
+      }
+
+    } 
+
+    if ((blnSwordSelected == true) && (keyCode == LEFT || keyCode == RIGHT)) {
+
+      image(imgSwordSelected, 200, intSwordY);
+      image(imgWandS2, 430, intWandY);
+
+    } else {
+
+      image(imgSwordS1, 200, intSwordY);
+      image(imgWandSelected, 430, intWandY);
+
+    }
+    // Selects the class for your character
+    if ((intWeaponSelect == 1) && (keyCode == ENTER)) {
+      blnWeapon1Selected = true;
+    } 
+    else if ((intWeaponSelect == 2) && (keyCode == ENTER)) {
+      blnWeapon1Selected = !true;
+    }
+    // Exits back into menu state
+    if (key == 'q') {
+      State = STATE.MENU;
     }
   }
 }
-  // define other methods down here. 
+
+  // define other methods down here. \
+
+  public void mousePressed() {
+  }
   public void healthBar() {
     // Creates Hp Bar
     strokeWeight(2);
@@ -270,8 +342,15 @@ public class Sketch1 extends PApplet {
     rect(50, 25, 300, 15);
   
     fill(255, 0, 0);
-    rect(50, 25, fltHpBar, 15);  
+    rect(50, 25, intHpBar, 15);  
+
+    if (blnWeapon1Selected == true) {
+      image(imgSwordIcon, 360, 15);
+    } 
+    else if (blnWeapon1Selected != true) {
+      image(imgWandIcon, 360, 15);
     }
+  }
 
   public void stageSelect() {
 
@@ -316,10 +395,13 @@ public class Sketch1 extends PApplet {
         image(imgPlayerUp1, intPlayerX, intPlayerY);
       }
     }
+
     else if (blnMoving && blnMovingUp) {
+
       if (intPlayerMoveTick > intStepLength) {
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
+
       }
       if (blnStep) 
       {
@@ -336,8 +418,10 @@ public class Sketch1 extends PApplet {
     {
       if (intPlayerMoveTick > intStepLength)
       {
+
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
+        
       }
       if (blnStep)
       {
@@ -348,13 +432,16 @@ public class Sketch1 extends PApplet {
         image(imgPlayerDown2, intPlayerX, intPlayerY);
       }
     }
+
     // Determines if player is facing down, if it is facing down, animate player moving down images
     else if (blnMoving && blnMovingLeft) 
     {
       if (intPlayerMoveTick > intStepLength)
       {
+
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
+
       }
 
       if (blnStep)
@@ -366,13 +453,16 @@ public class Sketch1 extends PApplet {
         image(imgPlayerLeft2, intPlayerX, intPlayerY);
       }
     }
+
     // Determines if player is facing up, if it is facing up, animate player moving down images
     else if (blnMoving && blnMovingRight) 
     {
       if (intPlayerMoveTick > intStepLength)
       {
+
         blnStep = !blnStep;
         intPlayerMoveTick = 0;
+
       }
 
       if (blnStep)
@@ -393,11 +483,6 @@ public class Sketch1 extends PApplet {
 
   } 
 }
-
-
-
-
-
 
 
 // TotalHp, sets the frame

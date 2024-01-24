@@ -3,14 +3,14 @@ import processing.core.PImage;
 
 public class Sketch extends PApplet {
 
- // Global Variables
+  // Global Variables
   int intMenuSelect; 
   float fltPlayerHp;
   int intHpBar = 300;
   boolean blnPlayerAlive;
   int intPlayerHitBox = 40; 
   
-   // Variables to confirm player movement
+  // Variables to confirm player movement
   boolean blnFaceRight = false;
   boolean blnFaceUp = false;
   boolean blnFaceLeft = false;
