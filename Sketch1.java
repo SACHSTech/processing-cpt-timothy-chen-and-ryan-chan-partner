@@ -1,39 +1,45 @@
 import processing.core.PApplet;
 import processing.core.PImage;
-import java.util.ArrayList;
 
 /**
- * A program thats creates a little game made by Timothy Chen and Ryan Chan of Mr. Fabroa's 2023/2024 ICS3U1 class
+ * A program thats creates a little game made by Timothy Chen and Ryan Chan of Mr. Fabroa's 2023/2024 ICS3U1 class, description is in the read me!
  * @author: T. Chen & Ryan. Chan
  */
 
 public class Sketch1 extends PApplet {
 
   // Global Variables
-  int intMenuSelect; 
-  int intPlayerHp = 10;
+  int intMenuSelect = 1; 
+  int intPlayerHp = 300;
   int intHpBar = 300;
   boolean blnPlayerAlive;
   boolean blnWeapon1Selected; 
-
-  // Global Variables for weapon beams
-  int intCountBeams;
-  int intWeaponBeamX = 0;
-  int intWeaponBeamY = 0;
+  int intStageNumber = 0;
+  boolean blnClearCondition;
   
   // Temporary variables to hold the position of the mouse at time of mouse pressed
   int intTempX = mouseX;
   int intTempY = mouseY;
 
   // Defining variables for weapon animation and selection
+  int intWeaponSpeed = 35;
   int intWeaponSelect = 0;
   int intSwordY = 350;
   int intWandY = 390;
 
   // Player Variables
-  int intPlayerX;
-  int intPlayerY; 
+  int intPlayerX = width / 2;
+  int intPlayerY = height / 2; 
   int intPlayerHitBox = 40;
+
+  // Global Variables for weapon beams
+  float fltWeaponBeamX = intPlayerX;
+  float fltWeaponBeamY = intPlayerY;
+
+  // Hollow Purple X & Y
+  int intHollowPurpleX = 256;
+  int intHollowPurpleY = 256;
+  int intSizeIncrease = 64;
 
   // Speed
   int intPlayerSpeed = 8;
@@ -91,6 +97,7 @@ public class Sketch1 extends PApplet {
 
   // Other Images
   PImage imgSwordBeam;
+  PImage imgWandBeam;
   PImage imgHollowPurple;
   PImage imgSwordIcon;
   PImage imgWandIcon;
@@ -127,6 +134,7 @@ public class Sketch1 extends PApplet {
 
     // Loading other images
     imgSwordBeam = loadImage("weaponbeam.png");
+    imgWandBeam = loadImage("wandbeam.png");
     imgHollowPurple = loadImage("bowlingballofdeath.png");
 
   }
@@ -155,16 +163,19 @@ public class Sketch1 extends PApplet {
     imgPlayerRight2.resize(32, 32);
     imgPlayerDown1.resize(32, 32);
     imgPlayerDown2.resize(32, 32);
-    imgSwordBeam.resize(16, 16);
+    imgSwordBeam.resize(64, 64);
+    imgWandBeam.resize(64, 64);
     imgHollowPurple.resize(256, 256);
     imgSwordIcon.resize(32, 32);
     imgWandIcon.resize(32, 32);
+
   }
 
   /**
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
+
     // Selects the state of the game
     if ((intMenuSelect == 1) && (keyCode == ENTER)){
       background(255);
@@ -244,80 +255,73 @@ public class Sketch1 extends PApplet {
     playerDirection();
     healthBar();
     hollowPurple();
-  }
+    projectileMovement();
+    stageSelect();
+    // Determines the player status on the next stage after tutorial, sets conditions for losing and input to retry
+    if ((blnPlayerAlive == false) && (intStageNumber == 1)) {
+      text("Game Over, try again", CENTER, CENTER);
+      text("Press 'e' to try again", 400, 400);
+        if (key == 'e') {
+          intPlayerHp = 300;
+          blnPlayerAlive = true;
+          // fltTankHp = 600;
+        }
+      }
+    }
 
   // Determines if it is selection state, draws selection objects
   else if (State == STATE.SELECTION) {
     background(imgSelectScreen);
     image(imgSwordS1, 200, intSwordY);
     image(imgWandS2, 430, intWandY);
-    boolean blnSwordSelected = false;
 
     // If statement to determine weapon select and giving the weapon a numerical value
-    if (keyCode == LEFT) {
+    if (keyPressed) {
+      if (keyCode == LEFT) {
+        delay(50);
+        intWeaponSelect -= 1;
 
-      intWeaponSelect--;
+        if (intWeaponSelect < 1) {
+          intWeaponSelect = 1;
+        }
+      } 
+      if (keyCode == LEFT)  {
+        delay(50);
+        intWeaponSelect -= 1;
 
-      if (intWeaponSelect < 1) {
-        intWeaponSelect = 2;
+        if (intWeaponSelect < 1) {
+          intWeaponSelect = 1;
+        }
       }
+      if (keyCode == RIGHT)  {
+        delay(50);
+        intWeaponSelect += 1;
 
-      if (intWeaponSelect != 1) {
-      blnSwordSelected = false;
-      }
+        if (intWeaponSelect > 2) {
+          intWeaponSelect = 2;
+        }
+      } 
+      if (keyCode == RIGHT)  {
+        delay(50);
+       intWeaponSelect += 1;
 
-    } 
-    if (keyCode == LEFT)  {
-
-      intWeaponSelect--;
-
-      if (intWeaponSelect < 1) {
-        intWeaponSelect = 2;
-      }
-
-      if (intWeaponSelect != 1) {
-      blnSwordSelected = true;
-
+        if (intWeaponSelect > 2) {
+          intWeaponSelect = 2;
+        }
       }
     }
-    if (keyCode == RIGHT)  {
-
-      intWeaponSelect++;
-
-      if (intWeaponSelect > 2) {
-        intWeaponSelect = 1;
-      }
-
-      if (intWeaponSelect != 1) {
-      blnSwordSelected = false;
-
-      }
-    } 
-    if (keyCode == RIGHT)  {
-
-      intWeaponSelect++;
-
-      if (intWeaponSelect > 2) {
-        intWeaponSelect = 1;
-      }
-
-      if (intWeaponSelect != 2) {
-      blnSwordSelected = true;
-      }
-
-    } 
-
-    if ((blnSwordSelected == true) && (keyCode == LEFT || keyCode == RIGHT)) {
+    // With the weapon select value chosen in the select screen, draws weapon selected image
+    if (intWeaponSelect == 1) {
 
       image(imgSwordSelected, 200, intSwordY);
-      image(imgWandS2, 430, intWandY);
 
-    } else {
+    }
+    else if (intWeaponSelect == 2) {
 
-      image(imgSwordS1, 200, intSwordY);
       image(imgWandSelected, 430, intWandY);
 
     }
+
     // Selects the class for your character
     if ((intWeaponSelect == 1) && (keyCode == ENTER)) {
       blnWeapon1Selected = true;
@@ -332,11 +336,49 @@ public class Sketch1 extends PApplet {
   }
 }
 
-  // define other methods down here. \
+  // define other methods down here. 
+  /**
+   * Moves the projectile when the mouse is pressed and to where the mouse is pressed
+   */
+  public void projectileMovement() {
+    if(mousePressed) {
+      image(imgSwordBeam, fltWeaponBeamX, fltWeaponBeamY);
 
-  public void mousePressed() {
+      if (fltWeaponBeamX < intTempX) {
+
+          fltWeaponBeamX += intWeaponSpeed;
+
+      } 
+      else if (fltWeaponBeamX > intTempX) {
+
+          fltWeaponBeamX -= intWeaponSpeed;
+  
+      }
+      if (fltWeaponBeamY < intTempY) {
+
+          fltWeaponBeamY += intWeaponSpeed;
+    
+      }
+      else if (fltWeaponBeamY > intTempY) {
+
+          fltWeaponBeamY -= intWeaponSpeed;
+
+      } 
+    }
   }
+  /**
+   * Detects mouseinput, sets temporary variable values to mouseX and mouseY so that the projectile does not constantly track the mouse
+   */
+  public void mousePressed() {
+    intTempX = mouseX;
+    intTempY = mouseY;
+  }
+
+  /**
+   * Draws the health bar for the player, draws an icon for the player hp to determine weapon class
+   */
   public void healthBar() {
+
     // Creates Hp Bar
     strokeWeight(2);
     stroke(0);
@@ -346,6 +388,7 @@ public class Sketch1 extends PApplet {
     fill(255, 0, 0);
     rect(50, 25, intHpBar, 15);  
 
+    // Using the boolean to determine which weapon was selected and bases the class icon drawn off that
     if (blnWeapon1Selected == true) {
       image(imgSwordIcon, 360, 15);
     } 
@@ -354,11 +397,11 @@ public class Sketch1 extends PApplet {
     }
   }
 
+  /**
+   * Sets conditions for player death and creates the clear condition for a stage, contains stage information
+   */
   public void stageSelect() {
 
-    int intStageNumber = 0;
-
-    boolean blnClearCondition;
     // Sets the condition for player death
     if (intPlayerHp == 0) {
       blnPlayerAlive = false;
@@ -372,6 +415,7 @@ public class Sketch1 extends PApplet {
       }
 
     }
+    // Stage information 
      if (intStageNumber == 0) {
       // tutorial stuff
      }
@@ -380,7 +424,9 @@ public class Sketch1 extends PApplet {
      }
     }
 
-  // define other methods down here. 
+  /**
+   * Determines player movement animation and direction sprite based off keyboard input
+   */ 
   public void playerDirection() {
     // Determines if player is facing right, if it is facing right, animate player moving right images
     if (!blnMoving) {
@@ -478,19 +524,20 @@ public class Sketch1 extends PApplet {
     }
   }
 
+  /**
+   * If button is pressed, the one who left it all behind regains a fragment of their powers to wield in combat.  
+   */
   public void hollowPurple() {
     int intHollowPurpleAtk = 221801;
-    int intHollowPurpleCounter;
-    boolean blnHollowPurpleActive = false;
-    if ((key == 'g') && (key == 'o') && (key == 'j') && (key == '/') && (key == '0')) {
-      blnHollowPurpleActive = true;
-      if (blnHollowPurpleActive == true) {
-        image(imgHollowPurple, 400, 400);
+ 
+    if (key == '0') {
+        image(imgHollowPurple, CENTER, height / 2, intHollowPurpleX, intHollowPurpleY);  
+        if (frameCount % 5 == 0) {
+          intHollowPurpleX += intSizeIncrease;
+          intHollowPurpleY += intSizeIncrease;
+        }
       }
     }
-  } 
-}
+  }
 
 
-// TotalHp, sets the frame
-// If damage is taken, hp goes lower
