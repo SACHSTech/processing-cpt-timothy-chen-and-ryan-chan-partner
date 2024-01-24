@@ -408,6 +408,10 @@ public class Sketch extends PApplet {
       healthBar();
       hollowPurple();
       playerDirection();
+      // Goes back to menu state
+      if ((key == 'q') || (key == 'Q')) {
+        State = STATE.MENU;
+      }
       
       // Player dash method
       playerDash();
@@ -421,7 +425,7 @@ public class Sketch extends PApplet {
         textSize(32);
         text("Game Over, try again", 200, 300);
         text("Press 'e' to try again", 400, 500);
-          if (key == 'e') {
+          if ((key == 'e') || (key == 'E')) {
             intStageNumber = 2;
             blnGameWon = false;
             intPlayerHp = 300;
@@ -492,7 +496,7 @@ public class Sketch extends PApplet {
         blnWeapon1Selected = !true;
       }
       // Exits back into menu state
-      if (key == 'q') {
+      if ((key == 'q') || (key == 'Q')) {
         State = STATE.MENU;
       }
     }

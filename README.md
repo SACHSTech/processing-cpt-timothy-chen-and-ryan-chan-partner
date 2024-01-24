@@ -15,7 +15,17 @@ Dash: Spacebar
 
 Attack: Mousepress
 
-Confirm Menu Button : ENTER
+Confirm Menu Button: ENTER
+
+Move between Menu Buttons: DOWN ARROW, UP ARROW
+
+Move between select screen weapons: LEFT ARROW, RIGHT ARROW
+
+Exit back to menu from select screen or game: 'q' or 'Q'
+
+Confirm Weapon Selection: ENTER
+
+Stage 1 game try again: 'e' or 'E'
 
 
 Limitations:
@@ -26,6 +36,7 @@ Limitations:
 
 ![Alt text](image.png)
 ![Alt text](image-1.png)
+
 Credit to RyiSnow for the base of some sprites!
 
 

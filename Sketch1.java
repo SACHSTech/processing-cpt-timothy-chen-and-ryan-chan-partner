@@ -15,6 +15,7 @@ public class Sketch1 extends PApplet {
   boolean blnWeapon1Selected; 
   int intStageNumber = 0;
   boolean blnClearCondition;
+  boolean blnGameWon = false;
   
   // Temporary variables to hold the position of the mouse at time of mouse pressed
   int intTempX = mouseX;
@@ -261,19 +262,24 @@ public class Sketch1 extends PApplet {
     hollowPurple();
     projectileMovement();
     stageSelect();
+    if ((key == 'q') || (key == 'Q')) {
+      State = STATE.MENU;
+    }
     
     // Determines the player status on the next stage after tutorial, sets conditions for losing and input to retry
     if ((blnPlayerAlive == false) && (intStageNumber == 2)) {
       textSize(32);
       text("Game Over, try again", 200, 300);
       text("Press 'e' to try again", 400, 500);
-        if (key == 'e') {
-          intPlayerHp = 300;
-          blnPlayerAlive = true;
-          // fltTankHp = 600;
-        }
+      if ((key == 'e') || (key == 'E')) {
+        intStageNumber = 2;
+        blnGameWon = false;
+        intPlayerHp = 300;
+        blnPlayerAlive = true;
+        // fltTankHp = 600;
       }
     }
+  }
 
   // Determines if it is selection state, draws selection objects
   else if (State == STATE.SELECTION) {
@@ -336,11 +342,14 @@ public class Sketch1 extends PApplet {
       blnWeapon1Selected = !true;
     }
     // Exits back into menu state
-    if (key == 'q') {
+    else if ((key == 'q') || (key == 'Q')) {
       State = STATE.MENU;
     }
   }
+
+
 }
+  
 
   // define other methods down here. 
   /**
@@ -428,10 +437,10 @@ public class Sketch1 extends PApplet {
     }
     // Stage information 
      if (intStageNumber == 0) {
-      // tutorial stuff
+      // Tutorial Stage (Insert Ryan's Code)
      }
      else if (intStageNumber == 1) {
-      // Boss level
+      // Boss level (Insert Ryan's Code)
      }
     }
 
@@ -540,19 +549,31 @@ public class Sketch1 extends PApplet {
    */
   public void hollowPurple() {
     int intHollowPurpleAtk = 221801;
-     
-    /* if (dist(intHollowPurpleX, intHollowPurpleY, intTankX, intTankY) <= 10) {
+    boolean blnHollowPurpleActive = false;
+
+    /*if (dist(intHollowPurpleX, intHollowPurpleY, intTankX, intTankY) <= 250) {
       fltTankHp -= intHollowPurpleAtk;
-    }
-    */
+    } */
+
     if (key == '0') {
-      image(imgHollowPurple, 400, 400, intHollowPurpleX, intHollowPurpleY);  
-      if (frameCount % 5 == 0) {
-        intHollowPurpleX += intSizeIncrease;
-        intHollowPurpleY += intSizeIncrease;
+      blnHollowPurpleActive = true;
+  }
+  if (blnHollowPurpleActive == true) {
+
+    image(imgHollowPurple, 400, 400, intHollowPurpleX, intHollowPurpleY);  
+    if (frameCount % 5 == 0) {
+
+      intHollowPurpleX += intSizeIncrease;
+      intHollowPurpleY += intSizeIncrease;
+
+      if(intHollowPurpleX > 1536) {
+        blnHollowPurpleActive = false;
+        intHollowPurpleX = 256;
+        intHollowPurpleY = 256;
       }
     }
   }
+}
 }
 
 
