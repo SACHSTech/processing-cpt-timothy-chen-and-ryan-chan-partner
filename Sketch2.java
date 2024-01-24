@@ -168,7 +168,7 @@ public class Sketch2 extends PApplet {
     image(imgGrassBackground, width/2, height/2, 800, 800);
     image(imgBrickBackground, width/2, -800, 800, 800);
 
-    // For loop to initialise the ballhidestatus and setting it to false.
+    // For loop to initialise the orc arrays.
     for (int intCounterOrc = 0; intCounterOrc < blnOrcHideStatus.length; intCounterOrc++){
       blnOrcHideStatus[intCounterOrc] = false;
       blnOrcMoving[intCounterOrc] = false;
@@ -357,7 +357,7 @@ public class Sketch2 extends PApplet {
   public void tankCannonball() {
     // if statement to determine if the player is within the tanks view distance.
     if (dist(intPlayerX, intPlayerY, intTankX, intTankY) <= intTankViewDistance) {
-      // if statement to determine if the playerX location is further than the tank ttack distance.
+      // if statement to determine if the playerX location is further than the tank attack distance.
       if (dist(intPlayerX, intPlayerY, intTankX, intTankY) > intTankAttackDistance ) {
         intTankX -= intTankSpeed;
       }
@@ -482,7 +482,7 @@ public class Sketch2 extends PApplet {
   }
 
   /**
-   * Tank death animation method to draw the tank deaht animation when the tank hp is zero.
+   * Tank death animation method to draw the tank death animation when the tank hp is zero.
    */
   public void tankDeathAnimation() {
     // if statement to keep the tank hp at 0 and the blnTankAlive to false.

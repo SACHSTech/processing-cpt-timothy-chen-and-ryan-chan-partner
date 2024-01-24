@@ -427,6 +427,7 @@ public class Sketch1 extends PApplet {
       
       blnPlayerAlive = false;
     }
+    
     // Sets the clear condition of a stage to be based off the player alive status and stage changes
     if(blnPlayerAlive == false) {
       
@@ -436,9 +437,9 @@ public class Sketch1 extends PApplet {
         intStageNumber += 1;
         intPlayerHp = 300;
         blnPlayerAlive = true;
-      }
-
+      } 
     }
+
     // Stage information 
      /* if (intStageNumber == 1) {
       // Image Background
@@ -582,7 +583,7 @@ public class Sketch1 extends PApplet {
 
     if (key == '0') {
       blnHollowPurpleActive = true;
-  }
+    }
   if (blnHollowPurpleActive == true) {
 
     image(imgHollowPurple, 400, 400, intHollowPurpleX, intHollowPurpleY);  

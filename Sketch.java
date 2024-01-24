@@ -58,7 +58,7 @@ public class Sketch extends PApplet {
   // Number of ticks till the new step animation is animated
   int intStepLength = 5;
 
-  // False is walk image 1, true is walk image 2
+  // False value is walk image 1, true value is walk image 2
   boolean blnStep = false;
 
   // Enumeration for the state of the game, menu vs gameplay
@@ -69,7 +69,7 @@ public class Sketch extends PApplet {
     QUIT
   }
 
-  // Creates State variable to check what state the game is in based on
+  // Creates State variable to base the game on
   private STATE State = STATE.MENU;
 
   // Player Images
@@ -192,7 +192,7 @@ public class Sketch extends PApplet {
     intPlayerX = width/2;
     intPlayerY = height/2;
 
-    // Loading Titlescreen Image
+    // Loading TitleScreen Image
     imgTitleScreen = loadImage("titlebackground.jpg");
 
     // Loading Selection menu object Images
@@ -297,7 +297,7 @@ public class Sketch extends PApplet {
     image(imgGrassBackground, width/2, height/2, 800, 800);
     image(imgBrickBackground, width/2, height/2, 800, 800);
 
-    // For loop to initialise the ballhidestatus and setting it to false.
+    // For loop to initialise the orc arrays.
     for (int intCounterOrc = 0; intCounterOrc < blnOrcHideStatus.length; intCounterOrc++){
       blnOrcHideStatus[intCounterOrc] = false;
       blnOrcMoving[intCounterOrc] = false;
@@ -552,7 +552,7 @@ public class Sketch extends PApplet {
   }
 
   /**
-   * Draws the health bar for the player, draws an icon for the player hp to determine weapon class
+   * Draws the health bar for the player, draws an icon next to the player hp to determine weapon class
    */
   public void healthBar() {
 
@@ -927,7 +927,7 @@ public class Sketch extends PApplet {
   public void tankCannonball() {
     // if statement to determine if the player is within the tanks view distance.
     if (dist(intPlayerX, intPlayerY, intTankX, intTankY) <= intTankViewDistance) {
-      // if statement to determine if the playerX location is further than the tank ttack distance.
+      // if statement to determine if the playerX location is further than the tank attack distance.
       if (dist(intPlayerX, intPlayerY, intTankX, intTankY) > intTankAttackDistance ) {
         intTankX -= 10;
       }
@@ -1052,7 +1052,7 @@ public class Sketch extends PApplet {
   }
 
   /**
-   * Tank death animation method to draw the tank deaht animation when the tank hp is zero.
+   * Tank death animation method to draw the tank death animation when the tank hp is zero.
    */
   public void tankDeathAnimation() {
     // if statement to keep the tank hp at 0 and the blnTankAlive to false.
@@ -1068,7 +1068,7 @@ public class Sketch extends PApplet {
         else {
           image(imgTankExplode[intMoveFrames], intTankX, intTankY);
         }
-        // if statement to draw the seperate frames after a certian amount of frames and finally set the blnTankHideStatus to true;
+        // if statement to draw the seperate frames after a certian amount of frames and finally set the blnTankHideStatus to true
         if (intMoveFrames >= 0) {
           if (frameCount % 60 == 0) {
             intMoveFrames = 1;
@@ -1203,7 +1203,7 @@ public class Sketch extends PApplet {
    * Player movement method for when the keys are released.
    */
   public void keyReleased() {
-    // if  and if else statements to set the boolean values to false except the face it was pointing
+    // if and if else statements to set the boolean values to false except the face it was pointing
     if (key == 'w' || key == 'W') {
       blnWPressed = false;
       blnMoving = false;
