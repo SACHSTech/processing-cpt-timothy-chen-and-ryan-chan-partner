@@ -15,6 +15,7 @@ public class Sketch1 extends PApplet {
   int intHpBar = 300;
   boolean blnPlayerAlive;
   boolean blnWeapon1Selected; 
+
   // Global Variables for weapon beams
   int intCountBeams;
   int intWeaponBeamX = 0;
@@ -51,7 +52,7 @@ public class Sketch1 extends PApplet {
   // Counts the ticks of the character moving to sync the animation
   int intPlayerMoveTick = 0;
 
-  //  Number of ticks till the new step animation is animated
+  // Number of ticks till the new step animation is animated
   int intStepLength = 5;
 
   // False is walk image 1, true is walk image 2
@@ -374,7 +375,7 @@ public class Sketch1 extends PApplet {
      if (intStageNumber == 0) {
       // tutorial stuff
      }
-     else if (intStageNumber == 2) {
+     else if (intStageNumber == 1) {
       // Boss level
      }
     }
@@ -478,16 +479,15 @@ public class Sketch1 extends PApplet {
   }
 
   public void hollowPurple() {
-    int intHollowPurpleAtk;
+    int intHollowPurpleAtk = 221801;
     int intHollowPurpleCounter;
     boolean blnHollowPurpleActive = false;
     if ((key == 'g') && (key == 'o') && (key == 'j') && (key == '/') && (key == '0')) {
       blnHollowPurpleActive = true;
       if (blnHollowPurpleActive == true) {
-        image(imgHollowPurple, 400, height/ 400);
+        image(imgHollowPurple, 400, 400);
       }
     }
-
   } 
 }
 
