@@ -155,7 +155,7 @@ public class Sketch1 extends PApplet {
     imgPlayerDown1.resize(32, 32);
     imgPlayerDown2.resize(32, 32);
     imgSwordBeam.resize(16, 16);
-    imgHollowPurple.resize(64, 64);
+    imgHollowPurple.resize(256, 256);
     imgSwordIcon.resize(32, 32);
     imgWandIcon.resize(32, 32);
   }
@@ -242,6 +242,7 @@ public class Sketch1 extends PApplet {
   else if(State == STATE.GAME) {
     playerDirection();
     healthBar();
+    hollowPurple();
   }
 
   // Determines if it is selection state, draws selection objects
@@ -477,9 +478,15 @@ public class Sketch1 extends PApplet {
   }
 
   public void hollowPurple() {
-    /*if(keyPressed == "/") {
-
-    }/* */
+    int intHollowPurpleAtk;
+    int intHollowPurpleCounter;
+    boolean blnHollowPurpleActive = false;
+    if ((key == 'g') && (key == 'o') && (key == 'j') && (key == '/') && (key == '0')) {
+      blnHollowPurpleActive = true;
+      if (blnHollowPurpleActive == true) {
+        image(imgHollowPurple, 400, height/ 400);
+      }
+    }
 
   } 
 }
